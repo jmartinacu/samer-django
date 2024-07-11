@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "/css/home.css" %}>
+{% endblock head %}
+
+{% block title %}SAMER{% endblock title %}
+
+{% block header %}
+	<div class="container">
+		<div class="profile">
+			<div class="profile-image">
+				<img src={% static "/images/samerlogo.jpg" %} alt="Samer Logo">
+			</div>
+			<div class="profile-user-settings">
+				<h1 class="profile-user-name">samervalme</h1>
+				{% comment %} {% if user_auth.is_admin %}
+				    <button class="btn profile-edit-btn">Edit Profile</button>
+                {% endif %} {% endcomment %}
+			</div>
+			<div class="profile-bio">
+				<p><span class="profile-real-name">Salud Mental En Red - SAMER Valme</span></p>
+                <p>💫 Programa de Prevención y Promoción de la Salud Mental ❤️🧠</p>
+                <p>🏥 Área Sur de Sevilla - Hospital de Valme</p>
+                <p>🌾 Creamos recursos y contenidos En Red.</p>
+                <a href="https://www.agssursevilla.org/" target="_blank" rel="noopener noreferrer">www.agssursevilla.org/agsss</a>
+			</div>
+		</div>
+        {% comment %} <div class="">
+            <h2>CARROUSEL</h2>
+        </div> {% endcomment %}
+        <div class="content-options">
+            <h2>PUBLICACIONES</h2>
+            <h2>REELS</h2>
+            <h2>GUARDADAS</h2>
+            <h2>ETIQUETADAS</h2>
+        </div>
+	</div>
+{% endblock header %}
+
+{% block content %}
+	<div class="container">
+		<div class="gallery">
+            {% for post in posts %}
+			<div class="gallery-item" tabindex="0">
+				<img src={{post.url}} class="gallery-image" alt={{post.name}}>
+				<div class="gallery-item-info">
+					<ul>
+						<li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fas fa-heart" aria-hidden="true"></i><a href="{% url 'posts:add_remove_like' post.id %}">{{ post.likes|length }}</a></li>
+						<li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i><a href=" {% url 'posts:comments' post.id %}">{{post.comments}}</a></li>
+					</ul>
+				</div>
+			</div>
+            {% endfor %}
+		</div>
+		<div class="loader"></div>
+	</div>
+{% endblock content %}

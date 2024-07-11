@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "/css/comment.css" %}>
+{% endblock head %}
+
+{% block title %}COMMENT{% endblock title %}
+
+{% block header %}{% endblock header %}
+
+{% block content %}
+    <div class="comment-container">
+        <img src={{post.url}} alt={{post.name}}>
+        <div class="comment-list">
+            {% if comments|length == 0 %}
+                <p>No hay comentarios</p>
+            {% else %}
+                {% for comment in comments %}
+                    <li>
+                        {{comment.text}}
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}

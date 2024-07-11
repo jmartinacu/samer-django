@@ -1,0 +1,18 @@
+{% extends "root/root.html" %}
+{% load static %}
+
+{% block subheader %}
+{% endblock subheader %}
+
+{% block content %}
+<div>
+    <form method="post" action="{% url 'root:upload' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ image_post_form.as_p }}
+        <input type="submit" value="Submit">
+        {% for error in image_post_form.errors %}
+            {{error}}
+        {% endfor %}
+    </form>
+</div>
+{% endblock content %}

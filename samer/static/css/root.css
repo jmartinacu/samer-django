@@ -1,0 +1,6 @@
+.root-header {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: nowrap;
+}

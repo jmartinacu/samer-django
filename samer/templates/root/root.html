@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "css/root.css" %}>
+    {% block subheader %}{% endblock subheader %}
+{% endblock head %}
+
+{% block title %}ADMINISTRADOR{% endblock title %}
+
+{% block header %}
+    <div class="root-header">
+        <h2>Publicaciones</h2>
+        <h2>Usuarios</h2>
+        <h2>Preguntas Frecuentes</h2>
+    </div>
+{% endblock header %}
+
+{% block content %}
+{% endblock content %}

@@ -1,4 +1,9 @@
 from pathlib import Path
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,6 +30,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'home',
+    'users',
+    'posts',
+    'root',
 ]
 
 MIDDLEWARE = [
@@ -42,7 +51,7 @@ ROOT_URLCONF = 'samerproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -50,6 +59,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'users.context_processors.user_auth',
             ],
         },
     },
@@ -62,11 +72,14 @@ WSGI_APPLICATION = 'samerproject.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': {}
 }
+
+# MongoDB
+
+CONNECTION_STRING = os.environ['CONNECTION_STRING']
+
+DB_NAME = os.environ['DB_NAME']
 
 
 # Password validation
@@ -105,7 +118,25 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# AWS S3
+
+AWS_BUCKET_NAME = os.environ["AWS_BUCKET_NAME"]
+
+AWS_DEFAULT_REGION = os.environ["AWS_DEFAULT_REGION"]
+
+# AUTH USER
+
+AUTHUSER_SESSION_ID = 'userauth'
+
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"

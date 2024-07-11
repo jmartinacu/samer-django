@@ -1,0 +1,12 @@
+main {
+    height: 100vh;
+}
+
+.login-container {
+    display: grid;
+    min-height: 100%;
+}
+
+.login-form {
+    place-self: center;
+}

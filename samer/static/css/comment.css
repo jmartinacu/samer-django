@@ -1,0 +1,13 @@
+main {
+    height: 100vh;
+}
+
+.comment-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+.comment-list {
+    align-self: center;
+}

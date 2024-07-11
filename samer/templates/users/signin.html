@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "/css/login.css" %}>
+{% endblock head %}
+
+{% block title %}SIGNIN{% endblock title %}
+
+{% block content %}
+<div class="container login-container">
+    <form method="post" action="{% url "users:signin" %}" class="login-form">
+        {% csrf_token %}
+        {{ signin_form.as_p }}
+        {% for error in errors %}
+            <p>{{error}}</p>
+        {% endfor %}
+        <input type="submit" value="Submit">
+    </form>
+</div>
+{% endblock content %}
