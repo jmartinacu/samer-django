@@ -1,3 +1,5 @@
+from ast import literal_eval
+
 from pymongo import MongoClient
 from pymongo.collection import Collection
 from bson import ObjectId
@@ -59,3 +61,11 @@ class MongoDBCollection:
 
 
 (db, client) = get_db_handle(settings.DB_NAME, settings.CONNECTION_STRING)
+
+
+def get_tuple_list_env(list: str | None):
+    if list is None:
+        return ''
+    res = list.split(';')
+    res = [literal_eval(t) for t in res]
+    return res

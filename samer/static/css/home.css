@@ -153,6 +153,11 @@ img {
     font-weight: 600;
 }
 
+.gallery-item-info a {
+    color: white;
+    text-decoration: none;
+}
+
 .gallery-item-likes {
     margin-right: 2.2rem;
 }

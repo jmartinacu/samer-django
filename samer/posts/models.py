@@ -10,14 +10,16 @@ class Post(MongoDBCollection):
     object_name: str | None
     url: str
     likes: list[str]
+    description: str | None
 
-    def create(self, name: str, object_name: str, url: str):
+    def create(self, name: str, object_name: str, url: str, description: str | None):
         post = {
             '_id': ObjectId(),
             'name': name,
             'object_name': object_name,
             'url': url,
             'likes': [],
+            'description': description,
         }
         res = self.collection.insert_one(post)
         return res

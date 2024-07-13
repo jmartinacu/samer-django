@@ -3,6 +3,7 @@
 
 {% block head %}
     <link rel="stylesheet" href={% static "/css/comment.css" %}>
+    <script src={% static "javascript/comment.js" %}></script>
 {% endblock head %}
 
 {% block title %}COMMENT{% endblock title %}
@@ -11,17 +12,35 @@
 
 {% block content %}
     <div class="comment-container">
-        <img src={{post.url}} alt={{post.name}}>
-        <div class="comment-list">
-            {% if comments|length == 0 %}
-                <p>No hay comentarios</p>
-            {% else %}
-                {% for comment in comments %}
+        <section class="comment-image-container">
+            <img src={{post.url}} alt={{post.name}}>
+        </section>
+        <div class="comment-list-container">
+            <ul class="comment-list">
+                {% if post.description %}
                     <li>
-                        {{comment.text}}
+                        {{post.description}}
                     </li>
-                {% endfor %}
-            {% endif %}
+                {% endif %}
+                {% if comments|length == 0 %}
+                    <p>No hay comentarios</p>
+                {% else %}
+                    {% for comment in comments %}
+                            <li>
+                                {{comment.text}} 
+                                {% if user_auth.is_login and user_auth.user_auth.id == comment.author %}
+                                    <a href="{% url "posts:remove_comment" post.id comment.id %}"><i class="material-icons">delete</i></a>
+                                {% endif %}
+                            </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+            <form id="createCommentForm" action="{% url 'posts:comment' post.id %}" method="post">
+                {% csrf_token %}
+                <div class="textarea-container">
+                    {{form.comment}}
+                </div>
+            </form>
         </div>
     </div>
 {% endblock content %}
