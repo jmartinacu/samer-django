@@ -46,7 +46,7 @@ def login(request):
                 )
             else:
                 user_auth.login(username=username, id=str(user['_id']))
-            return redirect(reverse('home:home'))
+            return redirect(reverse('home:home_images'))
     else:
         form = LoginForm()
     return render(request, 'users/login.html', {
@@ -78,7 +78,7 @@ def signin(request):
                 user_auth.login(
                     username=username, id=str(res_user.inserted_id)
                 )
-                return redirect(reverse('home:home'))
+                return redirect(reverse('home:home_images'))
             except Exception as e:  # pylint: disable=W0718
                 error_messages.append(f"Ocurrió un error inesperado: {e}")
                 return render(request, 'users/signin.html', {
@@ -96,4 +96,4 @@ def signin(request):
 def logout(request):
     user_auth = UserAuth(request)
     user_auth.logout()
-    return redirect(reverse('home:home'))
+    return redirect(reverse('home:home_images'))

@@ -1,8 +1,10 @@
+from os import path
+
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from samer.utils import upload_file
-from samer.posts.models import post as mongo_post
+from samer.posts.models import post as mongo_post, PostTypes
 from samer.root.forms import UploadImagePost
 
 
@@ -16,11 +18,13 @@ def upload_image_post(request):
         if form.is_valid():
             print('formulario valido')
             new_post = form.cleaned_data['image_post']
-            name = form.cleaned_data['name']
-            object_name = f'imagenes/{name}'
+            post_name = str(new_post.name)
+            name, _ext = path.splitext(post_name)
+            object_name = f'imagenes/{post_name}'
             uploaded_file_url = upload_file(new_post, object_name=object_name)
             mongo_post.create(
-                name=name, object_name=object_name, url=uploaded_file_url
+                name=name, object_name=object_name, url=uploaded_file_url,
+                description='', type=PostTypes.IMAGE
             )
             return redirect(reverse('root:root'))
         else:

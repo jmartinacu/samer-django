@@ -3,6 +3,7 @@
 
 {% block head %}
     <link rel="stylesheet" href={% static "/css/home.css" %}>
+    {% block subhead %}{% endblock subhead %}
 {% endblock head %}
 
 {% block title %}SAMER{% endblock title %}
@@ -24,36 +25,20 @@
                 <p>💫 Programa de Prevención y Promoción de la Salud Mental ❤️🧠</p>
                 <p>🏥 Área Sur de Sevilla - Hospital de Valme</p>
                 <p>🌾 Creamos recursos y contenidos En Red.</p>
-                <a href="https://www.agssursevilla.org/" target="_blank" rel="noopener noreferrer">www.agssursevilla.org/agsss</a>
+                <a href="https://www.agssursevilla.org/" target="_blank" rel="noopener noreferrer" class="profile-link">www.agssursevilla.org/agsss</a>
 			</div>
 		</div>
         {% comment %} <div class="">
             <h2>CARROUSEL</h2>
         </div> {% endcomment %}
         <div class="content-options">
-            <h2>PUBLICACIONES</h2>
-            <h2>REELS</h2>
-            <h2>GUARDADAS</h2>
-            <h2>ETIQUETADAS</h2>
+            <h2><a href="{% url "home:home_images" %}">IMAGENES</a></h2>
+            <h2><a href="{% url "home:home_videos" %}">VIDEOS</a></h2>
+            {% comment %} <h2>GUARDADAS</h2>
+            <h2>ETIQUETADAS</h2> {% endcomment %}
         </div>
 	</div>
 {% endblock header %}
 
 {% block content %}
-	<div class="container">
-		<div class="gallery">
-            {% for post in posts %}
-			<div class="gallery-item" tabindex="0">
-				<img src={{post.url}} class="gallery-image" alt={{post.name}}>
-				<div class="gallery-item-info">
-					<ul>
-						<li class="gallery-item-likes"><span class="visually-hidden material-icons">Likes:</span><i class="fas fa-heart" aria-hidden="true"></i><a href="{% url 'posts:add_remove_like' post.id %}">{{ post.likes|length }} <i class="material-icons">favorite</i></a></li>
-						<li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i><a href="{% url 'posts:comment' post.id %}">{{post.comments}} <i class="material-icons">chat_bubble</i></a></li>
-					</ul>
-				</div>
-			</div>
-            {% endfor %}
-		</div>
-		<div class="loader"></div>
-	</div>
 {% endblock content %}

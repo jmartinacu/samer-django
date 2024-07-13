@@ -15,7 +15,7 @@ def add_remove_like(request, post_id):
     user_auth = UserAuth(request)
     if not user_auth.is_login():
         # LANZAR ERROR NO AUTORIZADO
-        return redirect(reverse('home:home'))
+        return redirect(reverse('home:home_images'))
     post: Post | None = mongo_post.find_one(query={'_id': ObjectId(post_id)})
     if post is None:
         # EN VEZ DE UN ERROR PODRIA SOLTAR UN WARNING EN LA PANTALLA
@@ -37,7 +37,7 @@ def add_remove_like(request, post_id):
                 'likes': post['likes'] + [user_auth.user_auth['id']]
             }}
         )
-    return redirect(reverse('home:home'))
+    return redirect(reverse('home:home_images'))
 
 
 def comments(request, post_id: str):
@@ -45,7 +45,7 @@ def comments(request, post_id: str):
     if request.method == 'POST':
         if not user_auth.is_login():
             # LANZAR ERROR QUE NO ESTA AUTORIZADO
-            return redirect(reverse('home:home'))
+            return redirect(reverse('home:home_images'))
         comment_form = CreateCommentForm(request.POST)
         if comment_form.is_valid():
             comment = comment_form.cleaned_data['comment']
@@ -54,14 +54,15 @@ def comments(request, post_id: str):
             post_db = mongo_post.find_one(query={'_id': ObjectId(post_id)})
             if post_db is None:
                 # DEBERIA DE LANZAR UN ERROR AL USUARIO
-                return redirect(reverse('home:home'))
+                return redirect(reverse('home:home_images'))
             post = {
                 'id': str(post_db['_id']),
                 'name': post_db['name'],
                 'url': post_db['url'],
                 'comments': mongo_comment.count(query={'post': str(post_db['_id'])}),
                 'likes': post_db['likes'],
-                'description': post_db['description']
+                'description': post_db['description'],
+                'type': post_db['type'],
             }
             comments = mongo_comment.find(query={'post': post_id})
             comment_form = CreateCommentForm()
@@ -83,14 +84,15 @@ def comments(request, post_id: str):
         post_db = mongo_post.find_one(query={'_id': ObjectId(post_id)})
         if post_db is None:
             # DEBERIA DE LANZAR UN ERROR AL USUARIO
-            return redirect(reverse('home:home'))
+            return redirect(reverse('home:home_images'))
         post = {
             'id': str(post_db['_id']),
             'name': post_db['name'],
             'url': post_db['url'],
             'comments': mongo_comment.count(query={'post': str(post_db['_id'])}),
             'likes': post_db['likes'],
-            'description': post_db['description']
+            'description': post_db['description'],
+            'type': post_db['type'],
         }
         comment_form = CreateCommentForm()
         comments = mongo_comment.find(query={'post': post_id})
@@ -114,18 +116,18 @@ def remove_comment(request, post_id: str, comment_id: str):
     user_auth = UserAuth(request)
     if not user_auth.is_login():
         # LANZAR ERROR NO AUTORIZADO
-        return redirect(reverse('home:home'))
+        return redirect(reverse('home:home_images'))
     comment_db = mongo_comment.find_one({'_id': ObjectId(comment_id)})
     post_db = mongo_post.find_one(query={'_id': ObjectId(post_id)})
     if post_db is None:
         # DEBERIA DE LANZAR UN ERROR AL USUARIO
-        return redirect(reverse('home:home'))
+        return redirect(reverse('home:home_images'))
     if comment_db is None:
         # LANZAR ERROR NO ENCONTRADO
         return redirect(reverse('posts:comment', args=[post_id]))
     if not comment_db['author'] == user_auth.user_auth['id']:
         # LANZAR ERROR NO AUTORIZADO
-        return redirect(reverse('home:home'))
+        return redirect(reverse('home:home_images'))
     mongo_comment.delete_one({'_id': ObjectId(comment_id)})
     post = {
         'id': str(post_db['_id']),
@@ -133,11 +135,11 @@ def remove_comment(request, post_id: str, comment_id: str):
         'url': post_db['url'],
         'comments': mongo_comment.count(query={'post': str(post_db['_id'])}),
         'likes': post_db['likes'],
-        'description': post_db['description']
+        'description': post_db['description'],
+        'type': post_db['type'],
     }
     comment_form = CreateCommentForm()
     comments = mongo_comment.find(query={'post': post_id})
-    print('COMENTARIOS', comments)
     return render(request, 'posts/comment.html', {
         'post': post,
         'comments': [

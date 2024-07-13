@@ -1,11 +1,13 @@
+import os
 from ast import literal_eval
 
+import boto3
 from pymongo import MongoClient
 from pymongo.collection import Collection
 from bson import ObjectId
-import boto3
-from django.conf import settings
+from dotenv import load_dotenv
 
+load_dotenv()
 
 s3 = boto3.client('s3')
 
@@ -15,17 +17,19 @@ s3 = boto3.client('s3')
 def upload_file(file: bytes, object_name: str):
     s3.upload_fileobj(
         file,
-        settings.AWS_BUCKET_NAME,
+        os.environ['AWS_BUCKET_NAME'],
         object_name
     )
+    bucket = os.environ['AWS_BUCKET_NAME']
+    region = os.environ['AWS_DEFAULT_REGION']
     return (
-        f'https://{settings.AWS_BUCKET_NAME}.'
-        f's3.{settings.AWS_DEFAULT_REGION}.amazonaws.com/{object_name}'
+        f'https://{bucket}.s3.{region}.amazonaws.com/{object_name}'
     )
 
 
 def delete_file(object_name):
-    s3.delete_object(settings.AWS_BUCKET_NAME, object_name)
+    bucket = os.environ['AWS_BUCKET_NAME']
+    s3.delete_object(bucket, object_name)
 
 
 def get_db_handle(db_name: str, connection_string: str):
@@ -60,7 +64,9 @@ class MongoDBCollection:
         return self.collection.count_documents(query, *args, **kwargs)
 
 
-(db, client) = get_db_handle(settings.DB_NAME, settings.CONNECTION_STRING)
+(db, client) = get_db_handle(
+    os.environ['DB_NAME'], os.environ['CONNECTION_STRING']
+)
 
 
 def get_tuple_list_env(list: str | None):
