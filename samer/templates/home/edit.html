@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "css/profile.css" %}>
+{% endblock head %}
+
+{% block title %}SAMER - EDIT{% endblock title %}
+
+{% block header %}
+{% endblock header %}
+
+{% block content %}
+	<div class="container edit-profile-container">
+		<form method="post" action={% url "home:home_edit_profile" %} enctype="multipart/form-data" class="profile edit-form">
+            {% csrf_token %}
+			<div class="profile-image">
+				<img src={{profile.image_url}} alt="Imagen perfil samer">
+                <i class="overlay-icon material-icons">upload</i>
+                {{form.image_url}}
+			</div>
+			<div class="profile-user-settings">
+				<h1 class="profile-user-name">{{form.app_name}}</h1>
+			</div>
+			<div class="profile-bio">
+				<p><span class="profile-real-name">{{form.app_real_name}}</span></p>
+                <p>{{form.descriptions}}</p>
+                {{form.url}}
+			</div>
+            <div class="submit-edit-container">
+                <button class="btn profile-edit-btn" type="submit">Actualiza el perfil</button>
+            </div>
+		</form>
+	</div>
+    <script src={% static "javascript/profile.js" %}></script>
+{% endblock content %}

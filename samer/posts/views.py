@@ -8,6 +8,7 @@ from samer.posts.models import (
     post as mongo_post,
     comment as mongo_comment
 )
+from samer.posts.utils import get_mime_type_from_url
 from samer.users.context_processors import UserAuth
 
 
@@ -37,10 +38,13 @@ def add_remove_like(request, post_id):
                 'likes': post['likes'] + [user_auth.user_auth['id']]
             }}
         )
-    return redirect(reverse('home:home_images'))
+    if post['type'] == 'image':
+        return redirect(reverse('home:home_images'))
+    else:
+        return redirect(reverse('home:home_videos'))
 
 
-def comments(request, post_id: str):
+def comments(request, post_id: str, post_type: str):
     user_auth = UserAuth(request)
     if request.method == 'POST':
         if not user_auth.is_login():
@@ -63,10 +67,19 @@ def comments(request, post_id: str):
                 'likes': post_db['likes'],
                 'description': post_db['description'],
                 'type': post_db['type'],
+                'mime_type': get_mime_type_from_url(post_db['url']),
             }
             comments = mongo_comment.find(query={'post': post_id})
             comment_form = CreateCommentForm()
-            return render(request, 'posts/comment.html', {
+            template = ''
+            if post_type == 'image':
+                template = 'posts/image.html'
+            elif post_type == 'video':
+                template = 'posts/video.html'
+            else:
+                # LANZAR ERROR TYPE INCORRECTO
+                return redirect(reverse('home:home_images'))
+            return render(request, template, {
                 'post': post,
                 'comments': [
                     {
@@ -93,10 +106,19 @@ def comments(request, post_id: str):
             'likes': post_db['likes'],
             'description': post_db['description'],
             'type': post_db['type'],
+            'mime_type': get_mime_type_from_url(post_db['url']),
         }
         comment_form = CreateCommentForm()
         comments = mongo_comment.find(query={'post': post_id})
-        return render(request, 'posts/comment.html', {
+        template = ''
+        if post_type == 'image':
+            template = 'posts/image.html'
+        elif post_type == 'video':
+            template = 'posts/video.html'
+        else:
+            # LANZAR ERROR TYPE INCORRECTO
+            return redirect(reverse('home:home_images'))
+        return render(request, template, {
             'post': post,
             'comments': [
                 {
@@ -124,7 +146,7 @@ def remove_comment(request, post_id: str, comment_id: str):
         return redirect(reverse('home:home_images'))
     if comment_db is None:
         # LANZAR ERROR NO ENCONTRADO
-        return redirect(reverse('posts:comment', args=[post_id]))
+        return redirect(reverse('posts:comment', args=[post_id, post_db['type']]))
     if not comment_db['author'] == user_auth.user_auth['id']:
         # LANZAR ERROR NO AUTORIZADO
         return redirect(reverse('home:home_images'))
@@ -137,10 +159,19 @@ def remove_comment(request, post_id: str, comment_id: str):
         'likes': post_db['likes'],
         'description': post_db['description'],
         'type': post_db['type'],
+        'mime_type': get_mime_type_from_url(post_db['url']),
     }
     comment_form = CreateCommentForm()
     comments = mongo_comment.find(query={'post': post_id})
-    return render(request, 'posts/comment.html', {
+    template = ''
+    if post['type'] == 'image':
+        template = 'posts/image.html'
+    elif post['type'] == 'video':
+        template = 'posts/video.html'
+    else:
+        # LANZAR ERROR TYPE INCORRECTO
+        return redirect(reverse('home:home_images'))
+    return render(request, template, {
         'post': post,
         'comments': [
             {

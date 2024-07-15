@@ -11,5 +11,8 @@ urlpatterns = [
         views.remove_comment,
         name='remove_comment'
     ),
-    path('comment/<str:post_id>/', views.comments, name='comment'),
+    path(
+        'comment/<str:post_id>/<str:post_type>',
+        views.comments, name='comment'
+    ),
 ]

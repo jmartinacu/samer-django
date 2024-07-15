@@ -6,7 +6,6 @@ img {
     display: block;
 }
 
-
 .btn {
     display: inline-block;
     font: inherit;
@@ -80,6 +79,10 @@ img {
     margin-left: 2rem;
 }
 
+.profile-edit-btn:hover {
+    border: 0.1rem solid #181717;
+}
+
 .profile-settings-btn {
     font-size: 2rem;
     margin-left: 1rem;
@@ -112,6 +115,74 @@ img {
 .profile-stat-count,
 .profile-edit-btn {
     font-weight: 600;
+}
+
+/* Gallery Section */
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -1rem -1rem;
+    padding-bottom: 3rem;
+}
+
+.gallery-item {
+    position: relative;
+    flex: 1 0 22rem;
+    margin: 1rem;
+    color: #fff;
+    cursor: pointer;
+}
+
+.gallery-item:hover .gallery-item-info,
+.gallery-item:focus .gallery-item-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.gallery-item-info {
+    display: none;
+}
+
+.gallery-item-info li {
+    display: inline-block;
+    font-size: 1.7rem;
+    font-weight: 600;
+}
+
+.gallery-item-info a {
+    color: white;
+    text-decoration: none;
+}
+
+.gallery-item-likes {
+    margin-right: 2.2rem;
+}
+
+.gallery-item-type {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2.5rem;
+    text-shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.1);
+}
+
+.fa-clone,
+.fa-comment {
+    transform: rotateY(180deg);
+}
+
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
 }
 
 /* Media Query */
@@ -205,6 +276,12 @@ Remove or comment-out the code block below to see how the browser will fall-back
 */
 
 @supports (display: grid) {
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+        grid-gap: 2rem;
+    }
+
     .profile {
         display: grid;
         grid-template-columns: 1fr 2fr;
@@ -220,7 +297,9 @@ Remove or comment-out the code block below to see how the browser will fall-back
     .profile-image,
     .profile-user-settings,
     .profile-stats,
-    .profile-bio {
+    .profile-bio 
+    .gallery-item,
+    .gallery{
         width: auto;
         margin: 0;
     }

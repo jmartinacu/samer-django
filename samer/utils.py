@@ -29,7 +29,7 @@ def upload_file(file: bytes, object_name: str):
 
 def delete_file(object_name):
     bucket = os.environ['AWS_BUCKET_NAME']
-    s3.delete_object(bucket, object_name)
+    s3.delete_object(Bucket=bucket, Key=object_name)
 
 
 def get_db_handle(db_name: str, connection_string: str):

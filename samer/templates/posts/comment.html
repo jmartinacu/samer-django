@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block head %}
-    <link rel="stylesheet" href={% static "/css/comment.css" %}>
     <script src={% static "javascript/comment.js" %}></script>
+    <link rel="stylesheet" href={% static "/css/comment.css" %}>
+    {% block subhead %}{% endblock subhead %}
 {% endblock head %}
 
 {% block title %}COMMENT{% endblock title %}
@@ -13,7 +14,7 @@
 {% block content %}
     <div class="comment-container">
         <section class="comment-image-container">
-            <img src={{post.url}} alt={{post.name}}>
+            {% block url_content %}{% endblock url_content %}
         </section>
         <div class="comment-list-container">
             <ul class="comment-list">
@@ -35,7 +36,7 @@
                     {% endfor %}
                 {% endif %}
             </ul>
-            <form id="createCommentForm" action="{% url 'posts:comment' post.id %}" method="post">
+            <form id="createCommentForm" action="{% url 'posts:comment' post.id post.type %}" method="post">
                 {% csrf_token %}
                 <div class="textarea-container">
                     {{form.comment}}

@@ -3,7 +3,6 @@
 
 {% block head %}
     <link rel="stylesheet" href={% static "/css/home.css" %}>
-    {% block subhead %}{% endblock subhead %}
 {% endblock head %}
 
 {% block title %}SAMER{% endblock title %}
@@ -12,20 +11,20 @@
 	<div class="container">
 		<div class="profile">
 			<div class="profile-image">
-				<img src={% static "/images/samerlogo.jpg" %} alt="Samer Logo">
+				<img src={{profile.image_url}} alt="Samer Logo">
 			</div>
 			<div class="profile-user-settings">
-				<h1 class="profile-user-name">samervalme</h1>
-				{% comment %} {% if user_auth.is_admin %}
-				    <button class="btn profile-edit-btn">Edit Profile</button>
-                {% endif %} {% endcomment %}
+				<h1 class="profile-user-name">{{profile.app_name}}</h1>
+				{% if user_auth.is_admin %}
+				    <button class="btn profile-edit-btn"><a href={% url "home:home_edit_profile" %}>Edita el perfil</a></button>
+                {% endif %}
 			</div>
 			<div class="profile-bio">
-				<p><span class="profile-real-name">Salud Mental En Red - SAMER Valme</span></p>
-                <p>💫 Programa de Prevención y Promoción de la Salud Mental ❤️🧠</p>
-                <p>🏥 Área Sur de Sevilla - Hospital de Valme</p>
-                <p>🌾 Creamos recursos y contenidos En Red.</p>
-                <a href="https://www.agssursevilla.org/" target="_blank" rel="noopener noreferrer" class="profile-link">www.agssursevilla.org/agsss</a>
+				<p><span class="profile-real-name">{{profile.app_real_name}}</span></p>
+                {% for text in profile.descriptions %}
+                    <p>{{text}}</p>
+                {% endfor %}
+                <a href="https://www.agssursevilla.org/" target="_blank" rel="noopener noreferrer" class="profile-link">{{profile.url}}</a>
 			</div>
 		</div>
         {% comment %} <div class="">
@@ -41,4 +40,23 @@
 {% endblock header %}
 
 {% block content %}
+	<div class="container">
+		<div class="gallery">
+            {% for post in posts %}
+			<div class="gallery-item" tabindex="0">
+                {% if post.type == "image" %}
+				    <img src={{post.url}} class="gallery-image" alt={{post.name}}>
+                {% else %}
+				    <img src={{post.thumbnail_url}} class="gallery-image" alt={{post.name}}>
+                {% endif %}
+				<div class="gallery-item-info">
+					<ul>
+						<li class="gallery-item-likes"><span class="visually-hidden material-icons">Likes:</span><i class="fas fa-heart" aria-hidden="true"></i><a href="{% url 'posts:add_remove_like' post.id %}">{{ post.likes|length }} <i class="material-icons">favorite</i></a></li>
+						<li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i><a href="{% url 'posts:comment' post.id post.type %}">{{post.comments}} <i class="material-icons">chat_bubble</i></a></li>
+					</ul>
+				</div>
+			</div>
+            {% endfor %}
+		</div>
+	</div>
 {% endblock content %}

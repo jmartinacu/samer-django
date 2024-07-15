@@ -1,0 +1,9 @@
+{% extends "posts/comment.html" %}
+{% load static %}
+
+{% block subhead %}
+{% endblock subhead %}
+
+{% block url_content %}
+    <img src={{post.url}} alt={{post.name}}>
+{% endblock url_content %}

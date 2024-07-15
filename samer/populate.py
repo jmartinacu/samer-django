@@ -282,6 +282,21 @@ comments_data = [
     },
 ]
 
+profile_data = [
+    {
+        '_id': ObjectId(),
+        'app_name': 'samervalme',
+        'app_real_name': 'Salud Mental En Red - SAMER Valme\n',
+        'descriptions': [
+            '💫 Programa de Prevención y Promoción de la Salud Mental ❤️🧠',
+            '🏥 Área Sur de Sevilla - Hospital de Valme',
+            '🌾 Creamos recursos y contenidos En Red.',
+        ],
+        'url': 'https://www.agssursevilla.org/',
+        'image_url': 'https://samerbucket2.s3.eu-central-1.amazonaws.com/samerlogo.jpg',
+    }
+]
+
 
 def populate_posts():
     collection = db['Post']
@@ -301,10 +316,17 @@ def populate_comments():
     collection.insert_many(comments_data)
 
 
+def populate_profile():
+    collection = db['ProfileInformation']
+    collection.drop()
+    collection.insert_many(profile_data)
+
+
 def populate():
     populate_posts()
     populate_users()
     populate_comments()
+    populate_profile()
 
 
 populate()

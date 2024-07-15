@@ -16,7 +16,6 @@ def upload_image_post(request):
     if request.method == 'POST':
         form = UploadImagePost(request.POST, request.FILES)
         if form.is_valid():
-            print('formulario valido')
             new_post = form.cleaned_data['image_post']
             post_name = str(new_post.name)
             name, _ext = path.splitext(post_name)

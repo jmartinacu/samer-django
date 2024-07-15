@@ -1,0 +1,205 @@
+:root {
+    font-size: 10px;
+}
+
+img {
+    display: block;
+}
+
+.btn {
+    display: inline-block;
+    font: inherit;
+    background: none;
+    border: none;
+    color: inherit;
+    padding: 0;
+    cursor: pointer;
+}
+
+.btn:focus {
+    outline: 0.5rem auto #4d90fe;
+}
+
+.visually-hidden {
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+}
+
+/* Profile Section */
+
+.profile {
+    padding: 5rem 0;
+}
+
+.profile::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.profile-image {
+    position: relative;
+    float: left;
+    width: calc(33.333% - 1rem);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 3rem;
+}
+
+.profile-image img {
+    border-radius: 50%;
+}
+
+.profile-user-settings,
+.profile-stats,
+.profile-bio {
+    float: left;
+    width: calc(66.666% - 2rem);
+}
+
+.profile-user-settings {
+    margin-top: 1.1rem;
+}
+
+.profile-user-name {
+    display: inline-block;
+    font-size: 3.2rem;
+    font-weight: 300;
+}
+
+.profile-edit-btn {
+    font-size: 1.4rem;
+    line-height: 1.8;
+    border: 0.1rem solid #dbdbdb;
+    border-radius: 0.3rem;
+    padding: 0 2.4rem;
+    margin-left: 2rem;
+}
+
+.profile-edit-btn:hover {
+    border: 0.1rem solid #181717;
+}
+
+.profile-settings-btn {
+    font-size: 2rem;
+    margin-left: 1rem;
+}
+
+.profile-stats {
+    margin-top: 2.3rem;
+}
+
+.profile-stats li {
+    display: inline-block;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    margin-right: 4rem;
+    cursor: pointer;
+}
+
+.profile-stats li:last-of-type {
+    margin-right: 0;
+}
+
+.profile-bio {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-top: 2.3rem;
+}
+
+.profile-real-name,
+.profile-stat-count,
+.profile-edit-btn {
+    font-weight: 600;
+}
+
+.profile-link {
+    color: blue;            /* Color de texto por defecto para enlaces */
+    text-decoration: underline; /* Subrayado por defecto para enlaces */
+    cursor: pointer;        /* Puntero de enlace por defecto */
+}
+
+.profile-link:hover {
+    text-decoration: underline; /* Subrayado en hover */
+}
+
+.profile-link:visited {
+    color: purple;          /* Color de enlace visitado */
+}
+
+.edit-profile-container {
+    height: 100vh;
+    display: flex;
+}
+
+.edit-form {
+    justify-self: center;
+    align-self: center;
+}
+
+input, textarea {
+    border: none;
+    background-color: #fafafa;;
+}
+
+.app-real-name-form {
+    width: 350px;
+}
+
+.descriptions-form {
+    resize: none;
+    outline: none;
+}
+
+.descriptions-form::-webkit-scrollbar {
+    width: 0px;
+}
+
+.url-form {
+    width: 350px;
+}
+
+.submit-edit-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-edit-btn {
+    margin-top: 10px;
+    margin-left: 0;
+    font-size: 1.4rem;
+    line-height: 1.8;
+    border: 0.1rem solid #dbdbdb;
+    border-radius: 0.3rem;
+    margin-left: 2rem;
+    float: left;
+}
+
+.overlay-icon {
+    position: absolute; /* Posición absoluta para que el icono esté sobre la imagen */
+    top: 50%; /* Alinea el icono verticalmente en el centro */
+    left: 50%; /* Alinea el icono horizontalmente en el centro */
+    transform: translate(-50%, -50%); /* Centra el icono completamente */
+    color: white; /* Color del icono */
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente para destacar el icono */
+    padding: 10px; /* Espacio alrededor del icono */
+    border-radius: 50%; /* Borde redondeado para hacer el icono circular */
+    visibility: hidden; /* Inicialmente oculta el icono */
+    transition: visibility 0s, opacity 0.3s ease; /* Transición suave para la visibilidad */
+    cursor: pointer;
+}
+
+.profile-image:hover .overlay-icon {
+    visibility: visible; /* Muestra el icono cuando se hace hover en el contenedor */
+}
+
+.image-url-form {
+    display: none;
+}

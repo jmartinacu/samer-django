@@ -2,7 +2,8 @@ import subprocess
 from os import path
 from io import BytesIO
 
-from PIL import Image
+import magic
+import requests
 
 from samer.utils import upload_file
 
@@ -30,10 +31,16 @@ def upload_thumbnail(frame: int, video_url: str):
     video_name = video_url.split('/')[-1]
     thumb_name, _thumb_ext = path.splitext(video_name)
     thumb_io = BytesIO(process.stdout)
-    # image = Image.open(thumb_io)
-    # output_io = BytesIO()
-    # image.save(output_io, format='JPEG')
     thumbnail_url = upload_file(
         file=thumb_io, object_name=f'videos/thumbnails/{thumb_name}.jpg'
     )
     return thumbnail_url
+
+
+def get_mime_type_from_url(url):
+    response = requests.get(url, stream=True, timeout=10)
+    response.raise_for_status()
+    mime = magic.Magic(mime=True)
+    mime_type = mime.from_buffer(response.raw.read(1024))
+    response.close()
+    return mime_type
