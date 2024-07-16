@@ -7,7 +7,6 @@ class CreateCommentForm(forms.Form):
         widget=forms.Textarea(attrs={
             'onkeydown': 'submitFormOnEnter(event)',
             'placeholder': 'Añade un nuevo comentario',
-            'oninput': 'autoResize(this)',
             'class': 'create-comment-textarea'
         })
     )

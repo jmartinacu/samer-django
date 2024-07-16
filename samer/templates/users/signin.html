@@ -5,17 +5,28 @@
     <link rel="stylesheet" href={% static "/css/login.css" %}>
 {% endblock head %}
 
-{% block title %}SIGNIN{% endblock title %}
+{% block title %}SAMER{% endblock title %}
 
 {% block content %}
 <div class="container login-container">
-    <form method="post" action="{% url "users:signin" %}" class="login-form">
+    <form method="post" action="{% url "users:signin" %}" class="form">
         {% csrf_token %}
-        {{ signin_form.as_p }}
+        <div class="title">Bienvenido</div>
+        <div class="subtitle">Crea una cuenta en samer</div>
+        <div class="input-container ic1">
+            {{signin_form.user}}
+            <div class="cut"></div>
+            <label for="user" class="placeholder">Usuario</label>
+        </div>
+        <div class="input-container ic2">
+            {{signin_form.pwd}}
+            <div class="cut"></div>
+            <label for="pwd" class="placeholder">Contraseña</label>
+        </div>
         {% for error in errors %}
             <p>{{error}}</p>
         {% endfor %}
-        <input type="submit" value="Submit">
+        <button type="submit" class="submit">crea una cuenta</button>
     </form>
 </div>
 {% endblock content %}

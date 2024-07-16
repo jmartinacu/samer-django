@@ -50,10 +50,10 @@ def home_videos(request):
 
 def home_edit_profile(request):
     user_auth = UserAuth(request)
-    profile = list(mongo_profile.find(query={}))[0]
     if not user_auth.is_admin():
         # LANZAR UN ERROR
         return redirect(reverse('users:login'))
+    profile = list(mongo_profile.find(query={}))[0]
     if request.method == 'POST' and 'image_url' in request.FILES:
         profile_form = ProfileForm(request.POST, request.FILES)
         if profile_form.is_valid():
@@ -76,7 +76,7 @@ def home_edit_profile(request):
             return redirect(reverse('home:home_images'))
     else:
         profile_form = ProfileForm()
-        return render(request, 'home/edit.html', {
+        return render(request, 'home/profile.html', {
             'profile': profile,
             'form': profile_form,
         })

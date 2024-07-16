@@ -19,12 +19,13 @@
         <div class="comment-list-container">
             <ul class="comment-list">
                 {% if post.description %}
-                    <li>
+                    <li class="comment-description">
+                        {% comment %} <img src="{% static "images/samericon.png" %}" alt="Samer Icon"> {% endcomment %}
                         {{post.description}}
                     </li>
                 {% endif %}
                 {% if comments|length == 0 %}
-                    <p>No hay comentarios</p>
+                    <li>No hay comentarios</li>
                 {% else %}
                     {% for comment in comments %}
                             <li>

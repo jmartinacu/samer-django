@@ -19,6 +19,7 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    overflow: hidden;
 }
 
 .comment-image-container {
@@ -32,11 +33,16 @@ main {
     overflow: scroll;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
+    min-height: 200px;
     max-height: 350px;
 }
 
 .comment-list::-webkit-scrollbar {
     display: none;
+}
+
+.comment-description {
+    margin: 6px;
 }
 
 .comment-list li {
@@ -50,29 +56,18 @@ main {
     }
 }
 
-.create-comment-textarea {
-    vertical-align: middle; 
-    resize: none; 
-    overflow: hidden; 
-    padding: 10px 20px;
-    width: 340px;
-    border: none;
-    outline: none;
-    background: rgba(255, 255, 255, 0);
-}
-
 .textarea-container {
     /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
     display: grid;
     min-height: 2px; 
+    z-index: 0;
 }
+
 .textarea-container::after {
     /* Note the weird space! Needed to preventy jumpy behavior */
     content: attr(data-replicated-value) " ";
-
     /* This is how textarea text behaves */
     white-space: pre-wrap;
-
     /* Hidden from view, clicks, and screen readers */
     visibility: hidden;
 }
@@ -81,6 +76,12 @@ main {
 .grow-wrap::after {
     /* Identical styling required!! */
     padding: 0.5rem;
+    padding-left: 20px;
     /* Place on top of each other */
     grid-area: 1 / 1 / 2 / 2;
+}
+
+.create-comment-textarea {
+    border: none;    
+    resize: none;
 }
