@@ -1,5 +1,13 @@
 var mini = true;
 
+function openSidebar() {
+  const pathname = window.location.pathname;
+  if (pathname === "/") {
+    document.getElementById("mySidebar").style.width = "250px";
+    document.getElementById("main").style.marginLeft = "250px";
+  }
+};
+
 function toggleSidebar() {
   if (mini) {
     document.getElementById("mySidebar").style.width = "250px";
@@ -11,3 +19,7 @@ function toggleSidebar() {
     this.mini = true;
   }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  openSidebar();
+});

@@ -77,6 +77,7 @@ img {
     border-radius: 0.3rem;
     padding: 0 2.4rem;
     margin-left: 2rem;
+    background-color: var(--tertiary-color);
 }
 
 .profile-edit-btn:hover {

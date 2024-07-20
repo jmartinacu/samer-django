@@ -144,7 +144,7 @@ img {
 
 input, textarea {
     border: none;
-    background-color: #fafafa;;
+    background-color: var(--background-color);;
 }
 
 .app-real-name-form {
@@ -180,6 +180,7 @@ input, textarea {
     border-radius: 0.3rem;
     margin-left: 2rem;
     float: left;
+    background-color: var(--tertiary-color);
 }
 
 .overlay-icon {

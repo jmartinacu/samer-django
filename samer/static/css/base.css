@@ -29,10 +29,20 @@ a {
 
 /* BASE CSS SAMER */
 
+:root {
+    --primary-color: #9BBFB9;
+    --secondary-color: #86A873;
+    --tertiary-color: #EDD5D4;
+    --accent-color: #6D4C3D;
+    --background-color: rgba(235, 250, 254, 0.8);
+    --text-color: black;
+    --font-family-base: "Open Sans", Arial, sans-serif;
+}
+
 body {
     font-family: "Open Sans", Arial, sans-serif;
     min-height: 100vh;
-    background-color: #fafafa;
+    background-color: var(--background-color);
     color: #262626;
     padding-bottom: 3rem;
 }
@@ -51,7 +61,7 @@ body {
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #e4dddd;
+    background-color: var(--tertiary-color);
     transition: 0.5s;
     overflow-x: hidden;
     padding-top: 60px;
