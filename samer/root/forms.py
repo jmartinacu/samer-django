@@ -2,4 +2,19 @@ from django import forms
 
 
 class UploadImagePost(forms.Form):
-    image_post = forms.ImageField(label='Imagen publicación')
+    file = forms.FileField(widget=forms.ClearableFileInput(
+        attrs={
+            'class': 'image-form',
+            'style': 'display: none',
+        }
+    ))
+    des = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'input description-form',
+                'id': 'des',
+                'placeholder': ' ',
+            }
+        )
+    )

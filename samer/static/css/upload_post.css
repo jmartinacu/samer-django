@@ -1,0 +1,21 @@
+.description-form {
+  resize: none;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload-image-icon {
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.upload-image-icon:hover {
+  border-radius: 2px solid var(--accent-color);
+  border-radius: 50%;
+  cursor: pointer;
+}

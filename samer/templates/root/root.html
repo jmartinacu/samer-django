@@ -1,20 +1,29 @@
-{% extends "base.html" %}
 {% load static %}
-
-{% block head %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href={% static "images/samericon.png" %} type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href={% static "css/root.css" %}>
-    {% block subheader %}{% endblock subheader %}
-{% endblock head %}
-
-{% block title %}ADMINISTRADOR{% endblock title %}
-
-{% block header %}
-    <div class="root-header">
-        <h2>Publicaciones</h2>
-        <h2>Usuarios</h2>
-        <h2>Preguntas Frecuentes</h2>
-    </div>
-{% endblock header %}
-
-{% block content %}
-{% endblock content %}
+    {% block head %}{% endblock head %}
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    <header>
+        <div class="root-home">
+            <a href="{% url 'home:home_images' %}"><i class="material-icons">home</i></a>
+        </div>
+        <div class="root-panels">
+            <button><a href={% url "root:root" %}><h2>Publicaciones</h2></a></button>
+            <button><a href=""><h2>Comentarios</h2></a></button>
+            <button><a href=""><h2>Usuarios</h2></a></button>
+        </div>
+    </header>    
+    <main>
+        {% block content %}
+        {% endblock content %}
+    </main>
+</body>
+</html>

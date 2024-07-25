@@ -1,18 +1,33 @@
 {% extends "root/root.html" %}
 {% load static %}
 
-{% block subheader %}
-{% endblock subheader %}
+{% block head %}
+    <link rel="stylesheet" href={% static "/css/login.css" %}>
+    <link rel="stylesheet" href={% static "/css/upload_post.css" %}>
+{% endblock head %}
+
+{% block title %}CREAR POST{% endblock title %}
 
 {% block content %}
-<div>
-    <form method="post" action="{% url 'root:upload' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ image_post_form.as_p }}
-        <input type="submit" value="Submit">
-        {% for error in image_post_form.errors %}
-            {{error}}
-        {% endfor %}
-    </form>
-</div>
+    <div class="container login-container">
+        <form method="post" action="{% url 'root:upload' %}" enctype="multipart/form-data" class="form">
+            {% csrf_token %}
+            <div class="title">Publicación</div>
+            <div class="subtitle">Crea una publicación</div>
+            <div class="input-container ic1 image-container">
+                <i class="upload-image-icon material-icons">upload</i>
+                {{image_post_form.file}}
+            </div>
+            <div class="input-container ic2">
+                {{image_post_form.des}}
+                <div class="cut"></div>
+                <label for="des" class="placeholder">Descripción</label>
+            </div>
+            {% for error in errors %}
+                <p>{{error}}</p>
+            {% endfor %}
+            <button type="submit" class="submit">Crea la publicación</button>
+        </form>
+    </div>
+    <script src={% static "javascript/upload_post.js" %}></script>
 {% endblock content %}

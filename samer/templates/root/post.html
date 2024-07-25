@@ -1,9 +1,33 @@
 {% extends "root/root.html" %}
 {% load static %}
 
-{% block subheader %}
-{% endblock subheader %}
+{% block head %}
+    <link rel="stylesheet" href={% static "css/root_posts.css" %}>
+    <script src={% static "javascript/root_posts.js" %}></script>
+{% endblock head %}
+
+{% block title %}POSTS{% endblock title %}
 
 {% block content %}
-    <button><a href="{% url 'root:upload' %}">Subir publicación</a></button>
+    {% comment %} <button><a href="{% url 'root:upload' %}">Subir publicación</a></button> {% endcomment %}
+    <div class="posts-header">
+        <h3>Publicaciones: {{posts|length}}</h3>
+        <a href="{% url "root:upload" %}">
+            <img src="{% static "images/addicon.svg" %}" alt="Crear una publicación">
+        </a>
+    </div>
+    <section class="posts-list">
+        {% for post in posts %}
+            <a href="">
+                <div class="post-card">
+                    <h4>{{post.name}}</h4>
+                    <p>Tipo: {{post.type}}</p>
+                    <div class="post-info">
+                        <p>Me gustas: {{post.likes|length}}</p>
+                        <p>Comentarios: {{post.comments}}</p>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </section>
 {% endblock content %}
