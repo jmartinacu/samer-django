@@ -7,7 +7,7 @@ import magic
 import requests
 from PIL import Image
 
-from samer.utils import upload_file
+from samer.utils import upload_file, delete_file
 
 
 def upload_thumbnail(frame: int, video_url: str):
@@ -30,7 +30,7 @@ def upload_thumbnail(frame: int, video_url: str):
     )
     if process.returncode != 0:
         raise Exception(  # pylint: disable=W0719
-            f"ffmpeg error: {process.stderr.decode('utf-8')}"  # pylint: disable=W0719
+            f"ffmpeg error: {process.stderr.decode('utf-8')}"
         )  # pylint: disable=W0719
     video_name = video_url.split("/")[-1]
     thumb_name, _thumb_ext = os.path.splitext(video_name)
@@ -41,13 +41,22 @@ def upload_thumbnail(frame: int, video_url: str):
     return thumbnail_url
 
 
-def get_mime_type_from_url(url):
-    response = requests.get(url, stream=True, timeout=10)
-    response.raise_for_status()
-    mime = magic.Magic(mime=True)
-    mime_type = mime.from_buffer(response.raw.read(1024))
-    response.close()
-    return mime_type
+def delete_thumbnail(thumbnail_url: str):
+    thumbnail_name = thumbnail_url.split("/")[-1]
+    thumbnail_object_name = f"videos/thumbnails/{thumbnail_name}"
+    delete_file(thumbnail_object_name)
+
+
+def get_mime_type_from_urls(urls: list[str]) -> list[str] | str:
+    result = None
+    result = []
+    for url in urls:
+        response = requests.get(url, stream=True, timeout=10)
+        response.raise_for_status()
+        mime = magic.Magic(mime=True)
+        result.append(mime.from_buffer(response.raw.read(1024)))
+        response.close()
+    return result
 
 
 def is_image(file_bytes):
@@ -61,7 +70,10 @@ def is_image(file_bytes):
 def is_video(file_bytes):
     try:
         # Crea un archivo temporal
-        with tempfile.NamedTemporaryFile(suffix=".tmp", delete=True) as temp_file:
+        with tempfile.NamedTemporaryFile(
+            suffix=".tmp",
+            delete=True,
+        ) as temp_file:
             # Escribe los bytes en el archivo temporal
             temp_file.write(file_bytes)
             temp_file.flush()

@@ -1,0 +1,72 @@
+.post-visual-container {
+    position: relative;
+}
+
+.overlay-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 50%;
+    visibility: hidden;
+    transition: visibility 0s, opacity 0.3s ease;
+    cursor: pointer;
+}
+
+.post-visual-container:hover .overlay-icon {
+    visibility: visible;
+}
+
+.edit-list-container {
+    align-self: center;
+    justify-self: center;
+    border: 2px solid #ccc;
+    width: 500px;
+    max-height: 500px;
+    border-radius: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.edit-name-container {
+    display: flex;
+    gap: 5px;
+}
+
+.name-form {
+    height: 25px;
+    width: 400px;
+    resize: none;
+    padding: 0 5px;
+    background-color: var(--background-color);
+    border: none;
+}
+
+.description-form {
+    padding: 5px;
+    resize: none;
+    background-color: var(--background-color);
+    border: none;
+}
+
+textarea:focus {
+    border: 2px solid var(--accent-color);
+    border-radius: 12px;
+    outline: none;
+}
+
+button {
+    background-color: var(--background-color);
+    border-radius: 12px;
+    border: 2px solid  #ccc;
+    padding: 5px;
+}
+
+button:hover {
+    border-color: var(--accent-color);
+}

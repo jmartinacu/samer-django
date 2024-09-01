@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block head %}
-    <script src={% static "javascript/comment.js" %}></script>
     <link rel="stylesheet" href={% static "/css/comment.css" %}>
     {% block subhead %}{% endblock subhead %}
 {% endblock head %}
@@ -17,27 +16,32 @@
             {% block url_content %}{% endblock url_content %}
         </section>
         <div class="comment-list-container">
-            <ul class="comment-list">
-                {% if post.description %}
-                    <li class="comment-description">
-                        {% comment %} <img src="{% static "images/samericon.png" %}" alt="Samer Icon"> {% endcomment %}
-                        {{post.description}}
+            {% if post.description %}
+                <h3>Descripción:</h3>
+                <p class="comment-description">
+                    {{post.description}}
+                </p>
+            {% endif %}
+            <h3>Comentarios:</h3>
+            {% if comments|length == 0 %}
+                <p class="no-comment-list">No hay comentarios</p>
+            {% else %}
+                <ul class="comment-list">
+                {% for comment in comments %}
+                    <li>
+                        <div class="comment-list-item">
+                            <strong>{{comment.author.name}}</strong>
+                            {{comment.text}}
+                        </div>
+                        {% if user_auth.is_login and user_auth.user_auth.id == comment.author.id %}
+                            <a href="{% url "posts:remove_comment" post.id comment.id %}"><i class="material-icons">delete</i></a>
+                        {% endif %}
                     </li>
-                {% endif %}
-                {% if comments|length == 0 %}
-                    <li>No hay comentarios</li>
-                {% else %}
-                    {% for comment in comments %}
-                            <li>
-                                {{comment.text}} 
-                                {% if user_auth.is_login and user_auth.user_auth.id == comment.author %}
-                                    <a href="{% url "posts:remove_comment" post.id comment.id %}"><i class="material-icons">delete</i></a>
-                                {% endif %}
-                            </li>
-                    {% endfor %}
-                {% endif %}
-            </ul>
-            <form id="createCommentForm" action="{% url 'posts:comment' post.id post.type %}" method="post">
+                {% endfor %}
+                </ul>
+            {% endif %}
+            <h3 class="">Añade un comentario:</h3>
+            <form class="comment-form" id="createCommentForm" action="{% url 'posts:comment' post.id post.type %}" method="post">
                 {% csrf_token %}
                 <div class="textarea-container">
                     {{form.comment}}
@@ -45,4 +49,5 @@
             </form>
         </div>
     </div>
+    <script src={% static "javascript/comment.js" %}></script>
 {% endblock content %}

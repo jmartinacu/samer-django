@@ -5,5 +5,5 @@ textarea.addEventListener("keyup", e => {
 });
 
 document.querySelector('.overlay-icon').addEventListener('click', function() {
-    document.querySelector('.image-url-form').click(); 
+    document.querySelector('.image-url-form').click();
 });

@@ -1,0 +1,47 @@
+{% extends "root/root.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "/css/login.css" %}>
+{% endblock head %}
+
+{% block title %}CREATE ADMIN{% endblock title %}
+
+{% block content %}
+    <div class="container login-container">
+        <form method="post" action="{% url "root:create_admin" %}" class="form">
+            {% csrf_token %}
+            <div class="title">Administrador</div>
+            <div class="subtitle">Crea una cuenta de administrador</div>
+            <div class="input-container ic1">
+                {{admin_form.user}}
+                <div class="cut"></div>
+                <label for="user" class="placeholder">Usuario</label>
+            </div>
+            <div class="input-container ic1">
+                {{admin_form.email}}
+                <div class="cut"></div>
+                <label for="email" class="placeholder">Email</label>
+            </div>
+            <div class="input-container ic1">
+                {{admin_form.name}}
+                <div class="cut"></div>
+                <label for="name" class="placeholder">Nombre</label>
+            </div>
+            <div class="input-container ic1">
+                {{admin_form.surname}}
+                <div class="cut"></div>
+                <label for="surname" class="placeholder">Apellido</label>
+            </div>
+            <div class="input-container ic2">
+                {{admin_form.pwd}}
+                <div class="cut"></div>
+                <label for="pwd" class="placeholder">Contraseña</label>
+            </div>
+            {% for error in errors %}
+                <p>{{error}}</p>
+            {% endfor %}
+            <button type="submit" class="submit">Crea un admin</button>
+        </form>
+    </div>
+{% endblock content %}

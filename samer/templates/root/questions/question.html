@@ -1,0 +1,52 @@
+{% extends "root/root.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "css/root/posts.css" %}>
+    <link rel="stylesheet" href={% static "css/root/question.css" %}>
+{% endblock head %}
+
+{% block title %}QUESTION{% endblock title %}
+
+{% block content %}
+    <section class="question-container">
+        <div class="question-info">
+            <span><h4>Titulo:</h4><p> {{question.title}}</p></span>
+            <span><h4>Autor:</h4><p> {{question.author}}</p></span>
+            {% if question.archive %}
+                <span><h4>Archivada</h4></span>
+            {% endif %}
+            <div class="dropdown">
+                <button class="dropbtn"><i class="material-icons">settings</i></button>
+                <div class="dropdown-content">
+                    {% if not question.resolve %}
+                        <a href="{% url "questions:create_answer" question.id 'False'%}">Crear Respuesta</a>
+                        {% else %}
+                        <a href="{% url "questions:create_answer" question.id 'True'%}">Editar Respuesta</a>
+                    {% endif %}
+                    <a href="{% url "questions:delete_root" question.id %}">
+                        Eliminar
+                    </a>
+                    <a class="question-action" onclick="archiveAction(['{{question.id}}']); return false;">
+                        {% if not question.archive %}Archivar{% else %}Desarchivar{% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="question-content">
+            <p>Pregunta: </p>
+            <p>{{question.content}}</p>
+            <br>
+            {% if question.resolve %}
+                <div class="question-resolve">
+                    <p>Respuesta dada por: <strong>{{question.answer.admin}}</strong></p>
+                    <p>{{question.answer.text}}</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+    <script>
+        const CSRF_TOKEN = '{{ csrf_token }}';
+    </script>
+    <script src="{% static "javascript/root_selector.js" %}"></script>
+{% endblock content %}

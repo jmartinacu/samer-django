@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href={% static "images/samericon.png" %} type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href={% static "css/root.css" %}>
+    <link rel="stylesheet" href={% static "css/root/base.css" %}>
     {% block head %}{% endblock head %}
     <title>{% block title %}{% endblock title %}</title>
 </head>
@@ -17,10 +17,11 @@
         </div>
         <div class="root-panels">
             <button><a href={% url "root:root" %}><h2>Publicaciones</h2></a></button>
-            <button><a href=""><h2>Comentarios</h2></a></button>
-            <button><a href=""><h2>Usuarios</h2></a></button>
+            <button><a href={% url "root:users" %}><h2>Usuarios</h2></a></button>
+            <button><a href={% url "root:tags" %}><h2>Etiquetas</h2></a></button>
+            <button><a href={% url "root:questions" %}><h2>Preguntas</h2></a></button>
         </div>
-    </header>    
+    </header>
     <main>
         {% block content %}
         {% endblock content %}

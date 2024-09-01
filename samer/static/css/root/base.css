@@ -72,6 +72,7 @@ header button {
     border-radius: 12px;
     border: 2px solid #ccc;
 }
+
 header button:hover {
     border: 0.1rem solid var(--accent-color);
 }

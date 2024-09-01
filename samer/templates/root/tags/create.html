@@ -1,0 +1,58 @@
+{% extends "root/root.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "css/login.css" %}>
+    <link rel="stylesheet" href={% static "css/root/posts.css" %}>
+    <link rel="stylesheet" href={% static "css/root/upload_post.css" %}>
+    <link rel="stylesheet" href={% static "css/root/create_tag.css" %}>
+{% endblock head %}
+
+{% block title %}CREATE TAG{% endblock title %}
+
+{% block content %}
+    <div class="tag-container">
+        <div class="container login-container">
+            <form method="post" action="{% url 'root:tag_action' %}" enctype="multipart/form-data" class="form">
+                {% csrf_token %}
+                <div class="title">Etiqueta</div>
+                <div class="subtitle">Crea una etiqueta</div>
+                <div class="input-container ic1 image-container">
+                    <i class="upload-image-icon material-icons">upload</i>
+                    {{form.file}}
+                </div>
+                <div class="input-container ic2">
+                    {{form.name}}
+                    <div class="cut"></div>
+                    <label for="name" class="placeholder">Nombre etiqueta</label>
+                </div>
+                {{form.ids}}
+                {% for error in errors %}
+                    <p>{{error}}</p>
+                {% endfor %}
+                <button type="submit" class="submit">Crea la etiqueta</button>
+            </form>
+        </div>
+        <table class="posts-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                    <tr>
+                        <td>
+                            {{post.name}}
+                        </td>
+                        <td>
+                            {{post.type}}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src={% static "javascript/upload_post.js" %}></script>
+{% endblock content %}

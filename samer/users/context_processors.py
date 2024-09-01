@@ -12,11 +12,17 @@ class UserAuth:
     def save(self):
         self.session.modified = True
 
-    def login(self, username: str, id: str, email: str = '', admin: bool = False):
-        self.user_auth['username'] = username
-        self.user_auth['id'] = id
-        self.user_auth['email'] = email
-        self.user_auth['admin'] = admin
+    def login(
+        self,
+        username: str,
+        id: str,
+        email: str = "",
+        admin: bool = False,
+    ):
+        self.user_auth["username"] = username
+        self.user_auth["id"] = id
+        self.user_auth["email"] = email
+        self.user_auth["admin"] = admin
         self.save()
 
     def logout(self):
@@ -24,11 +30,11 @@ class UserAuth:
         self.save()
 
     def is_login(self):
-        return 'username' in self.user_auth
+        return "username" in self.user_auth
 
     def is_admin(self):
-        return 'admin' in self.user_auth and self.user_auth['admin']
+        return "admin" in self.user_auth and self.user_auth["admin"]
 
 
 def user_auth(request):
-    return {'user_auth': UserAuth(request)}
+    return {"user_auth": UserAuth(request)}

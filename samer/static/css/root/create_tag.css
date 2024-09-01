@@ -1,0 +1,16 @@
+.tag-container {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+.login-container {
+    align-self: center;
+    justify-self: center;
+}
+
+.posts-table {
+    align-self: center;
+    justify-self: center;
+}

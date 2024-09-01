@@ -1,0 +1,112 @@
+.questions-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+}
+
+.questions-header h2 {
+    text-align: center;
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    padding: 5px;
+}
+
+.search-questions input {
+    border: 2px solid var(--tertiary-color);
+    background-color: rgba(237, 213, 212, 0.6);
+    border-radius: 12px;
+    padding: 5px;
+}
+
+.search-questions input:focus {
+    border-color: var(--accent-color);
+}
+
+.dropdown-content {
+    margin-left: 15px;
+}
+
+.dropdown-content button {
+    text-decoration: none;
+    display: block;
+    background-color: var(--background-color);
+    padding: 5px;
+    border: none;
+}
+
+.dropdown-content button:hover {
+    background-color: #f1f1f1;
+    border-radius: 12px;
+    border: 2px solid var(--accent-color);
+    cursor: pointer;
+}
+
+.questions-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.questions-content div {
+  margin-bottom: 20px;
+}
+
+.questions-content div:last-child {
+  margin-bottom: 0;
+}
+
+.question-container {
+    position: relative;
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    width: 800px;
+    min-height: 100px;
+}
+
+.question-container:hover {
+    border-color: var(--accent-color);
+}
+
+.question-resolve:hover {
+    border-color: var(--secondary-color);
+}
+
+.question-answer {
+    display: none;
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    padding: 10px;
+}
+
+.question-answer strong {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.question-author {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-left: 10px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.check-resolve {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-right: 10px;
+    margin-top: 10px;
+}

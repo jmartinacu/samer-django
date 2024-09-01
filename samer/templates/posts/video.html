@@ -1,11 +1,10 @@
 {% extends "posts/comment.html" %}
 {% load static %}
 
-{% block subhead %}
-{% endblock subhead %}
+{% block subhead %}{% endblock subhead %}
 
 {% block url_content %}
     <video controls>
-        <source src={{post.url}} type={{post.mime_type}}>
+        <source src={{post.urls.0}} type={{post.mime_type.0}}>
     </video>
 {% endblock url_content %}

@@ -1,0 +1,53 @@
+{% extends "root/root.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "css/root/post.css" %}>
+    <link rel="stylesheet" href={% static "css/root/edit_post.css" %}>
+    <link rel="stylesheet" href={% static "css/slider.css" %}>
+{% endblock head %}
+
+{% block title %}EDIT POST{% endblock title %}
+
+{% block content %}
+    <section class="post-details">
+        <div class="post-visual-container">
+            {% if post.type == 'image' %}
+	            {% if post.urls|length == 1%}
+		            <img src={{post.urls.0}} alt={{post.name}}>
+	            {% else %}
+		            <div class="slider-wrapper">
+			            <div class="slider">
+				            {% for image in post.urls %}
+				                <img id="slide-{{post.name}}-{{forloop.counter}}" src={{image}} class="slide" alt="{{post.name}}-slide-{{forloop.counter}}">
+				            {% endfor %}
+			            </div>
+			            <div class="dots">
+				            {% for image in post.urls %}
+					            <a href="#slide-{{post.name}}-{{forloop.counter}}"></a>
+				            {% endfor %}
+			            </div>
+		            </div>
+	            {% endif %}
+                <i class="overlay-icon material-icons">upload</i>
+            {% else %}
+                <img src="{{post.thumbnail_url}}" alt="post.name">
+                <i class="overlay-icon material-icons">upload</i>
+            {% endif %}
+        </div>
+        <div class="edit-list-container">
+            <form action="{% url "root:edit_post" post.id%}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <span class="edit-name-container">
+                    <h4>Nombre:</h4>
+                    {{edit_post_form.name}}
+                </span>
+                <h4>Nueva Descripción:</h4>
+                {{edit_post_form.des}}
+                {{edit_post_form.file}}
+                <button type="submit">Actualiza la publicación</button>
+            </form>
+        </div>
+    </section>
+    <script src={% static "javascript/edit_post.js" %}></script>
+{% endblock content %}

@@ -1,4 +1,4 @@
-from samer.samerproject.settings.base import *  # pylint: disable=W0401,W0614,E0611
+from samer.samerproject.settings.base import *  # noqa
 
 DEBUG = True
 

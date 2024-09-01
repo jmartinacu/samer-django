@@ -14,6 +14,7 @@
 <body>
     <aside id="mySidebar" class="sidebar" onmouseover="toggleSidebar()" onmouseout="toggleSidebar()">
         <a href="{% url 'home:home_images' %}"><span><i class="material-icons">home</i><span class="icon-text">inicio</span></a><br>
+        <a href="{% url 'questions:questions' %}"><span><i class="material-icons">question_mark</i><span class="icon-text">preguntas</span></a><br>
         {% if user_auth.is_login %}
             <a href="{% url 'users:logout' %}"><span><i class="material-icons">logout</i><span class="icon-text">cierra sesión</span></a><br>
         {% else %}
@@ -33,9 +34,5 @@
             {% endblock content %}
         </main>
     </section>
-    {% comment %} <footer>
-        {% block footer %}
-        {% endblock footer %}
-    </footer> {% endcomment %}
 </body>
 </html>

@@ -1,11 +1,11 @@
-from samer.samerproject.settings.base import *  # pylint: disable=W0401,W0614,E0611
+from samer.samerproject.settings.base import *  # noqa
 from samer.utils import get_tuple_list_env
 
 DEBUG = False
 
-ADMINS = get_tuple_list_env(os.getenv('ADMINS'))
+ADMINS = get_tuple_list_env(os.getenv("ADMINS"))  # noqa
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 # SSL/TLS
 

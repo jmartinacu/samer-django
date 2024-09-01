@@ -1,6 +1,15 @@
+ul li {
+  margin-bottom: 5px;
+}
+
+ul li:last-child {
+  margin-bottom: 0;
+}
+
 main {
     height: 100vh;
 }
+
 
 .comment-container {
     height: 100vh;
@@ -9,79 +18,77 @@ main {
     grid-template-rows: 1fr;
 }
 
+.comment-image-container {
+    position: relative;
+    align-self: center;
+    justify-self: center;
+}
+
+.slider {
+    aspect-ratio: 1/1;
+}
+
+.slider img {
+    object-fit: cover;
+}
+
 .comment-list-container {
     align-self: center;
     justify-self: center;
     border: 2px solid #ccc;
     width: 350px;
-    max-height: 400px;
+    max-height: 500px;
     border-radius: 20px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     overflow: hidden;
 }
 
-.comment-image-container {
-    align-self: center;
-    justify-self: center;
+.comment-description {
+    max-height: 100px;
+    overflow-y: auto;
+    margin: 5px;
+}
+
+.no-comment-list {
+    margin: 5px;
 }
 
 .comment-list {
+    max-height: 300px;
+    padding: 5px;
     list-style-type: none;
-    padding-left: 0;
     overflow: scroll;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
-    min-height: 200px;
-    max-height: 350px;
 }
 
-.comment-list::-webkit-scrollbar {
-    display: none;
+.comment-list > li {
+    display: flex;
+    align-items: center;
 }
 
-.comment-description {
-    margin: 6px;
+.comment-list-item {
+    display: flex;
+    flex-direction: column;
 }
 
-.comment-list li {
-    padding: 10px 20px;
-    border-bottom: 1px solid #ccc;
-    &:last-child {
-        border-bottom: none;
-    }
-    &:nth-child(even) {
-        background: #f8f8f8;
-    }
+h3:last-of-type {
+    margin-top: 5px;
 }
 
-.textarea-container {
-    /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
-    display: grid;
-    min-height: 2px; 
-    z-index: 0;
-}
-
-.textarea-container::after {
-    /* Note the weird space! Needed to preventy jumpy behavior */
-    content: attr(data-replicated-value) " ";
-    /* This is how textarea text behaves */
-    white-space: pre-wrap;
-    /* Hidden from view, clicks, and screen readers */
-    visibility: hidden;
-}
-
-.create-comment-textarea,
-.grow-wrap::after {
-    /* Identical styling required!! */
-    padding: 0.5rem;
-    padding-left: 20px;
-    /* Place on top of each other */
-    grid-area: 1 / 1 / 2 / 2;
+.comment-form {
+    max-height: 100px;
+    overflow-y: auto;
+    padding: 5px;
 }
 
 .create-comment-textarea {
-    border: none;    
+    height: 50px;
+    width: 305px;
+    margin-top: 5px;
+    padding: 5px;
     resize: none;
+    background-color: var(--tertiary-color);
 }

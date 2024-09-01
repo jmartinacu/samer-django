@@ -1,0 +1,56 @@
+{% extends "root/root.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "css/root/posts.css" %}>
+    <link rel="stylesheet" href={% static "css/root/tag.css" %}>
+{% endblock head %}
+
+{% block title %}TAG{% endblock title %}
+
+{% block content %}
+    <section class="tag-details">
+        <div class="tag-visual-container">
+		    <img src={{tag.url}} alt={{tag.name}}>
+        </div>
+        <div class="tag-info">
+            <span><h4>Name: </h4>{{tag.name}}</span>
+            <br>
+            <h4>Publicaciones:</h4>
+            <table class="posts-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in tag.posts %}
+                        <tr>
+                            <td>
+                                {{post.name}}
+                            </td>
+                            <td>
+                                {{post.type}}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="search-post">
+                <textarea name="search" id="search" placeholder="Busca una publicación..."></textarea>
+                <div id="dropdown"></div>
+            </div>
+            <div class="actions-buttons">
+                <button><a href="{% url "root:delete_tag" tag.id %}">Eliminar</a></button>
+                <button id="search-button">Añade una publicación</button>
+            </div>
+        </div>
+    </section>
+    <script>
+        const TAG_ID = "{{tag.id}}";
+        const TAG_POSTS = {{posts_json|safe}}
+        const CSRF_TOKEN = "{{ csrf_token }}";
+    </script>
+    <script src={% static "javascript/tag.js" %}></script>
+{% endblock content %}

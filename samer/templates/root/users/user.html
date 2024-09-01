@@ -1,0 +1,28 @@
+{% extends "root/root.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "css/root/user.css" %}>
+{% endblock head %}
+
+{% block title %}USERS{% endblock title %}
+
+{% block content %}
+    <div class="root-user-header">
+        <h3>Información Usuario: </h3>
+        <h4>{{user.name}}</h4>
+        <h4>{{user.email}}</h4>
+        {% if user_auth.is_admin %}
+            <h4><strong>Administrador</strong></h4>
+        {% endif %}
+    </div>
+    <div class="root-user-content">
+        <ul>
+            {% for comment in comments %}
+                <li>
+                    {{comment.text}}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock content %}

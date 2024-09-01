@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "users",
     "posts",
     "root",
+    "questions",
 ]
 
 MIDDLEWARE = [
@@ -36,6 +37,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "samer.middleware.auth_middleware.RootMiddleware",
 ]
 
 ROOT_URLCONF = "samerproject.urls"
@@ -131,3 +133,38 @@ AWS_DEFAULT_REGION = os.environ["AWS_DEFAULT_REGION"]
 AUTHUSER_SESSION_ID = "userauth"
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+
+# MONGO MODELS
+
+AUTH_ACTION_MODELS = [
+    "User",
+    "Post",
+    "Tag",
+    "Question",
+]
+
+AUTH_INCLUDE_PATHS = [
+    {
+        "name": "posts:add_posts_tag",
+        "type": "dynamic",
+        "args": ["dummy_id"],
+    },
+    {
+        "name": "questions:create_answer",
+        "type": "dynamic",
+        "args": ["dummy_id", "dummy_edit"],
+    },
+    {
+        "name": "questions:delete_root",
+        "type": "dynamic",
+        "args": ["dummy_id"],
+    },
+    {
+        "name": "posts:search_posts",
+        "type": "static",
+    },
+    {
+        "name": "questions:archive",
+        "type": "static",
+    },
+]

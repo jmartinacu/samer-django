@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "css/login.css" %}>
+{% endblock head %}
+
+{% block title %}SAMER QUESTIONS{% endblock title %}
+
+{% block content %}
+    <div class="container login-container">
+        <form method="post" action="{% url "questions:create" %}" class="form">
+            {% csrf_token %}
+            <div class="title">Pregunta</div>
+            <div class="subtitle">Crea una nueva pregunta</div>
+            <div class="input-container ic1">
+                {{form.title}}
+                <div class="cut"></div>
+                <label for="title" class="placeholder">Titulo</label>
+            </div>
+            <div class="input-container ic2">
+                {{form.content}}
+                <div class="cut"></div>
+                <label for="content" class="placeholder">Pregunta</label>
+            </div>
+            {{form.author}}
+            {% for error in errors %}
+                <p>{{error}}</p>
+            {% endfor %}
+            <button type="submit" class="submit">Crea una pregunta</button>
+        </form>
+    </div>
+{% endblock content %}

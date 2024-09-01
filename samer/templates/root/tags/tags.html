@@ -1,0 +1,53 @@
+{% extends "root/root.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "css/root/posts.css" %}>
+{% endblock head %}
+
+{% block title %}TAGS{% endblock title %}
+
+{% block content %}
+    <div class="posts-header">
+        <div class="post-header-content">
+            <h3>Etiquetas: {{tags|length}}</h3>
+            <div class="dropdown">
+                <button class="dropbtn" onmouseover="toggleActions()"><i class="material-icons">settings</i></button>
+                <div class="dropdown-content">
+                    <a class="delete-action" onclick="deleteAction(); return false;">
+                        Eliminar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="posts-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Nombre</th>
+                <th>Publicaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tag in tags %}
+                <tr>
+                    <td>
+                        <input type="checkbox" onclick="toggleSelection(this, '{{tag.id}}')">
+                    </td>
+                    <td onclick="window.location.href='{% url 'root:tag_details' tag.id %}'">
+                        {{tag.name}}
+                    </td>
+                    <td onclick="window.location.href='{% url 'root:tag_details' tag.id %}'">
+                        {{tag.posts|length}}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        const MODEL="Tag";
+        const CSRF_TOKEN = '{{ csrf_token }}';
+    </script>
+    <script src={% static "javascript/root_selector.js" %}></script>
+{% endblock content %}

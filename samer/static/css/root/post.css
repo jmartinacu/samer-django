@@ -1,0 +1,98 @@
+.post-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+.post-visual-container {
+    align-self: center;
+    justify-self: center;
+    margin: 20px;
+}
+
+.comment-image-container {
+    position: relative;
+    align-self: center;
+    justify-self: center;
+}
+
+.slider {
+    aspect-ratio: 1/1;
+}
+
+.slider img {
+    object-fit: cover;
+}
+
+.comment-list-container {
+    align-self: center;
+    justify-self: center;
+    border: 2px solid #ccc;
+    width: 350px;
+    max-height: 500px;
+    border-radius: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.comment-description {
+    max-height: 100px;
+    overflow-y: auto;
+    margin: 5px;
+}
+
+.no-comment-list {
+    margin: 5px;
+}
+
+.comment-list {
+    max-height: 300px;
+    padding: 5px;
+    list-style-type: none;
+    overflow: scroll;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.comment-list > li {
+    display: flex;
+    align-items: center;
+}
+
+.comment-list-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.actions-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin: 10px;
+}
+
+.actions-buttons > button {
+    background-color: var(--background-color);
+    border-radius: 12px;
+    border: 2px solid  #ccc;
+    padding: 5px;
+}
+
+.actions-buttons > button:hover {
+    border-color: var(--accent-color);
+}
+
+h3:last-of-type {
+    margin-top: 5px;
+}
+
+ul li {
+  margin-bottom: 5px;
+}
+
+ul li:last-child {
+  margin-bottom: 0;
+}

@@ -1,0 +1,80 @@
+{% extends "root/root.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "css/root/posts.css" %}>
+{% endblock head %}
+
+{% block title %}USERS{% endblock title %}
+
+{% block content %}
+    <div class="posts-header">
+        <div class="post-header-content">
+            <h3>Usuarios: {{users|length}}</h3>
+            <div class="dropdown">
+                <button class="dropbtn" onmouseover="toggleActions()"><i class="material-icons">settings</i></button>
+                <div class="dropdown-content">
+                    <a href="{% url "root:create_admin" %}">Crear Admin</a>
+                    <a class="delete-action" onclick="deleteAction(); return false;"><p>Eliminar</p></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="posts-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Administrador</th>
+                <th>Usuario</th>
+                <th>Email</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>
+                        <input type="checkbox" onclick="toggleSelection(this, '{{user.id}}')">
+                    </td>
+                    <td onclick="window.location.href='{% url 'root:user_details' user.id %}'">
+                        {% if user.admin %}
+                            <strong>admin</strong>
+                        {% else %}
+                            usuario
+                        {% endif %}
+                    </td>
+                    <td onclick="window.location.href='{% url 'root:user_details' user.id %}'">
+                        {{user.username}}
+                    </td>
+                    <td onclick="window.location.href='{% url 'root:user_details' user.id %}'">
+                        {% if user.admin %}
+                            {{user.email}}
+                        {% else %}
+                            No hay datos
+                        {% endif %}
+                    </td>
+                    <td onclick="window.location.href='{% url 'root:user_details' user.id %}'">
+                        {% if user.admin %}
+                            {{user.name}}
+                        {% else %}
+                            No hay datos
+                        {% endif %}
+                    </td>
+                    <td onclick="window.location.href='{% url 'root:user_details' user.id %}'">
+                        {% if user.admin %}
+                            {{user.surname}}
+                        {% else %}
+                            No hay datos
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        const MODEL="User";
+        const CSRF_TOKEN = '{{ csrf_token }}';
+    </script>
+    <script src={% static "javascript/root_selector.js" %}></script>
+{% endblock content %}

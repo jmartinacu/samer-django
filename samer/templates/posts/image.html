@@ -2,8 +2,24 @@
 {% load static %}
 
 {% block subhead %}
+    <link rel="stylesheet" href={% static "/css/slider.css" %}>
 {% endblock subhead %}
 
 {% block url_content %}
-    <img src={{post.url}} alt={{post.name}}>
+	{% if post.urls|length == 1%}
+		<img src={{post.urls.0}} alt={{post.name}}>
+	{% else %}
+		<div class="slider-wrapper">
+			<div class="slider">
+				{% for image in post.urls %}
+				    <img id="slide-{{post.name}}-{{forloop.counter}}" src={{image}} class="slide" alt="{{post.name}}-slide-{{forloop.counter}}">
+				{% endfor %}
+			</div>
+			<div class="dots">
+				{% for image in post.url %}
+					<a href="#slide-{{post.name}}-{{forloop.counter}}"></a>
+				{% endfor %}
+			</div>
+		</div>
+	{% endif %}
 {% endblock url_content %}

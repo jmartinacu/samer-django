@@ -1,0 +1,73 @@
+{% extends "root/root.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "css/root/posts.css" %}>
+{% endblock head %}
+
+{% block title %}POSTS{% endblock title %}
+
+{% block content %}
+    <div class="posts-header">
+        <div class="post-header-content">
+            <h3>Publicaciones: {{posts|length}}</h3>
+            <div class="dropdown">
+                <button class="dropbtn" onmouseover="toggleActions()"><i class="material-icons">settings</i></button>
+                <div class="dropdown-content">
+                    <a href="{% url "root:upload_post" %}">Crear Publi</a>
+                    <a class="delete-action" onclick="deleteAction(); return false;">
+                        Eliminar
+                    </a>
+                    <a class="tag-action" onclick="tagAction(); return false;">
+                        Crea Etiqueta
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="posts-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Me Gustas</th>
+                <th>Comentarios</th>
+                <th>Etiquetas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+                <tr>
+                    <td>
+                        <input type="checkbox" onclick="toggleSelection(this, '{{post.id}}')">
+                    </td>
+                    <td onclick="window.location.href='{% url 'root:post_details' post.id %}'">
+                        {{post.name}}
+                    </td>
+                    <td onclick="window.location.href='{% url 'root:post_details' post.id %}'">
+                        {{post.type}}
+                    </td>
+                    <td onclick="window.location.href='{% url 'root:post_details' post.id %}'">
+                        {{post.likes|length}}
+                    </td>
+                    <td onclick="window.location.href='{% url 'root:post_details' post.id %}'">
+                        {{post.comments}}
+                    </td>
+                    <td onclick="window.location.href='{% url 'root:post_details' post.id %}'">
+                        {% if post.tags != "" %}
+                            {{post.tags}}
+                        {% else %}
+                            No tiene etiquetas
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        const MODEL="Post";
+        const CSRF_TOKEN = '{{ csrf_token }}';
+    </script>
+    <script src={% static "javascript/root_selector.js" %}></script>
+{% endblock content %}

@@ -1,0 +1,68 @@
+{% extends "root/root.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "css/root/post.css" %}>
+    <link rel="stylesheet" href={% static "css/slider.css" %}>
+{% endblock head %}
+
+{% block title %}POST{% endblock title %}
+
+{% block content %}
+    <section class="post-details">
+        <div class="post-visual-container">
+            {% if post.type == 'image' %}
+	            {% if post.urls|length == 1%}
+		            <img src={{post.urls.0}} alt={{post.name}}>
+	            {% else %}
+		            <div class="slider-wrapper">
+			            <div class="slider">
+				            {% for image in post.urls %}
+				                <img id="slide-{{post.name}}-{{forloop.counter}}" src={{image}} class="slide" alt="{{post.name}}-slide-{{forloop.counter}}">
+				            {% endfor %}
+			            </div>
+			            <div class="dots">
+				            {% for image in post.urls %}
+					            <a href="#slide-{{post.name}}-{{forloop.counter}}"></a>
+				            {% endfor %}
+			            </div>
+		            </div>
+	            {% endif %}
+            {% else %}
+                <video controls>
+                    <source src={{post.urls.0}} type={{post.mime_type.0}}>
+                </video>
+            {% endif %}
+        </div>
+        <div class="comment-list-container">
+            <h2>{{post.name}}</h2>
+            <br>
+            {% if post.description %}
+                <h3>Descripción:</h3>
+                <p class="comment-description">
+                    {{post.description}}
+                </p>
+            {% endif %}
+            <h3>Comentarios:</h3>
+            {% if comments|length == 0 %}
+                <p class="no-comment-list">No hay comentarios</p>
+            {% else %}
+                <ul class="comment-list">
+                {% for comment in comments %}
+                    <li>
+                        <div class="comment-list-item">
+                            <strong>{{comment.author.name}}</strong>
+                            {{comment.text}}
+                        </div>
+                        <a href="{% url "posts:remove_comment" post.id comment.id %}"><i class="material-icons">delete</i></a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            <div class="actions-buttons">
+                <button><a href="{% url "root:delete_post" post.id %}">Eliminar</a></button>
+                <button><a href="{% url "root:edit_post" post.id %}">Editar</a></button>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

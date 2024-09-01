@@ -11,19 +11,23 @@ class ProfileInformation(MongoDBCollection):
     image_url: str
 
     def create(
-        self, app_name: str, app_real_name: str,
-        descriptions: list[str], image_url: str, url: str | None = None
+        self,
+        app_name: str,
+        app_real_name: str,
+        descriptions: list[str],
+        image_url: str,
+        url: str | None = None,
     ):
         profile = {
-            '_id': ObjectId(),
-            'app_name': app_name,
-            'app_real_name': app_real_name,
-            'descriptions': descriptions,
-            'url': url,
-            'image_url': image_url,
+            "_id": ObjectId(),
+            "app_name": app_name,
+            "app_real_name": app_real_name,
+            "descriptions": descriptions,
+            "url": url,
+            "image_url": image_url,
         }
         res = self.collection.insert_one(profile)
         return res
 
 
-profile = ProfileInformation(db=db, collection_name='ProfileInformation')
+profile = ProfileInformation(db=db, collection_name="ProfileInformation")

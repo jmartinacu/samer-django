@@ -272,7 +272,7 @@ img {
 
 The following code will only run if your browser supports CSS grid.
 
-Remove or comment-out the code block below to see how the browser will fall-back to flexbox & floated styling. 
+Remove or comment-out the code block below to see how the browser will fall-back to flexbox & floated styling.
 
 */
 
@@ -298,7 +298,7 @@ Remove or comment-out the code block below to see how the browser will fall-back
     .profile-image,
     .profile-user-settings,
     .profile-stats,
-    .profile-bio 
+    .profile-bio
     .gallery-item,
     .gallery{
         width: auto;
@@ -340,6 +340,7 @@ Remove or comment-out the code block below to see how the browser will fall-back
 .content-options {
     display: flex;
     justify-content: space-evenly;
+    margin-top: 2rem;
     margin-bottom: 2rem;
 }
 

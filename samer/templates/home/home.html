@@ -3,6 +3,8 @@
 
 {% block head %}
     <link rel="stylesheet" href={% static "/css/home.css" %}>
+    <link rel="stylesheet" href={% static "/css/slider.css" %}>
+    <link rel="stylesheet" href={% static "/css/carousel.css" %}>
 {% endblock head %}
 
 {% block title %}SAMER{% endblock title %}
@@ -27,14 +29,20 @@
                 <a href="https://www.agssursevilla.org/" target="_blank" rel="noopener noreferrer" class="profile-link">{{profile.url}}</a>
 			</div>
 		</div>
-        {% comment %} <div class="">
-            <h2>CARROUSEL</h2>
-        </div> {% endcomment %}
+		<div class="carousel-container">
+    		<button class="carousel-button prev" onclick="carouselScrollLeft()">&#10094;</button>
+    		<div class="carousel-wrapper">
+        		<div class="carousel-images">
+					{% for tag in tags %}
+						<a href="{% url "home:home_tag" tag.id%}"><img src="{{tag.url}}" alt="{{tag.name}}"></a>
+					{% endfor %}
+        		</div>
+    		</div>
+    		<button class="carousel-button next" onclick="carouselScrollRight()">&#10095;</button>
+		</div>
         <div class="content-options">
             <h2><a href="{% url "home:home_images" %}">IMAGENES</a></h2>
             <h2><a href="{% url "home:home_videos" %}">VIDEOS</a></h2>
-            {% comment %} <h2>GUARDADAS</h2>
-            <h2>ETIQUETADAS</h2> {% endcomment %}
         </div>
 	</div>
 {% endblock header %}
@@ -45,7 +53,22 @@
             {% for post in posts %}
 			<div class="gallery-item" tabindex="0">
                 {% if post.type == "image" %}
-				    <img src={{post.url}} class="gallery-image" alt={{post.name}}>
+					{% if post.urls|length == 1%}
+				    	<img src={{post.urls.0}} class="gallery-image" alt={{post.name}}>
+					{% else %}
+						<div class="slider-wrapper">
+							<div class="slider">
+								{% for image in post.urls %}
+				    				<img id="slide-{{post.name}}-{{forloop.counter}}" src={{image}} class="gallery-image slide" alt="{{post.name}}-slide-{{forloop.counter}}">
+								{% endfor %}
+							</div>
+							<div class="dots">
+								{% for image in post.urls %}
+									<a href="#slide-{{post.name}}-{{forloop.counter}}"></a>
+								{% endfor %}
+							</div>
+						</div>
+					{% endif %}
                 {% else %}
 				    <img src={{post.thumbnail_url}} class="gallery-image" alt={{post.name}}>
                 {% endif %}
@@ -59,4 +82,5 @@
             {% endfor %}
 		</div>
 	</div>
+    <script src={% static "javascript/carousel.js" %}></script>
 {% endblock content %}
