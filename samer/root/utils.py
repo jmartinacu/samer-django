@@ -24,7 +24,6 @@ def create_post(files, name, des):
         query={"name": name},
     )
     if check_post_name is not None:
-        # YA EXISTE UN POST CON ESE NOMBRE
         return {"error": True, "status": "DuplicateName"}
     upload_video = False
     upload_image = False
@@ -54,7 +53,6 @@ def create_post(files, name, des):
             upload_image = True
         elif is_video(post_bytes):
             if index > 0:
-                # SOLO PUEDEN SUBIRSE UN VIDEO
                 rollback_posts(file_results["object_names"])
                 return {
                     "error": True,
@@ -125,7 +123,6 @@ def edit_post(files, name, des, post: ParsedPost):
             upload_image = True
         elif is_video(post_bytes):
             if index > 0:
-                # SOLO PUEDEN SUBIRSE UN VIDEO
                 rollback_posts(file_results["object_names"])
                 return {
                     "error": True,

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href={% static "css/base.css" %}>
     <script src={% static "javascript/base.js" %}></script>
+    <script src={% static "javascript/messages.js" %}></script>
     {% block head %}{% endblock head %}
     <title>{% block title %}{% endblock title %}</title>
 </head>
@@ -34,5 +35,32 @@
             {% endblock content %}
         </main>
     </section>
+	{% if messages %}
+    	<ul class="messages">
+        	{% for message in messages %}
+				{% if message.tags == "info" %}
+            		<li class="info-msg message">
+						<i class="material-icons">info</i>
+						{{ message }}
+					</li>
+				{% elif message.tags == "success" %}
+            		<li class="success-msg message">
+						<i class="material-icons">check</i>
+						{{ message }}
+					</li>
+				{% elif message.tags == "warning" %}
+            		<li class="warning-msg message">
+						<i class="material-icons">warning</i>
+						{{ message }}
+					</li>
+				{% elif message.tags == "error" %}
+            		<li class="error-msg message">
+						<i class="material-icons">cancel</i>
+						{{ message }}
+					</li>
+				{% endif %}
+        	{% endfor %}
+    	</ul>
+	{% endif %}
 </body>
 </html>

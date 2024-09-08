@@ -3,6 +3,7 @@ import json
 from bson import ObjectId
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib import messages
 
 from samer.questions.models import question as mongo_question
 from samer.questions.forms import CreateQuestionForm, CreateQuestionAnswerForm
@@ -47,7 +48,10 @@ def questions(request):
 def create(request):
     user_auth = UserAuth(request)
     if not user_auth.is_login():
-        # TIENES QUE ESTAR LOGEADO
+        messages.warning(
+            request,
+            "Tienes tener una cuenta para crear una pregunta",
+        )
         return redirect(reverse("users:login"))
     if request.method == "POST":
         form = CreateQuestionForm(request.POST)
@@ -59,8 +63,10 @@ def create(request):
                 username=author,
             )
             if len(unresolved_questions) > 0:
-                # LANZAR ERROR NO SE PUEDEN CREAR
-                # SI EXISTEN PREGUNTAS NO RESUELTAS
+                messages.warning(
+                    request,
+                    "No se puede crear una nueva pregunta, ya hay una en curso",  # noqa
+                )
                 return redirect(reverse("questions:questions"))
             mongo_question.create(title=title, content=content, author=author)
             return redirect(reverse("questions:questions"))
@@ -110,10 +116,10 @@ def create_answer(request, question_id, edit):
     user_auth = UserAuth(request)
     question = mongo_question.parse_question(question_id)
     if question is None:
-        # LANZA ERROR
+        messages.error(request, "Pregunta no encontrada")
         return redirect(reverse("root:questions"))
     if question["resolve"] and not bool(edit):
-        # LANZAR NOTIFICACIÓN YA RESUELTA
+        messages.info(request, "Pregunta ya resuelta")
         return redirect(reverse("root:questions"))
     if request.method == "POST":
         form = CreateQuestionAnswerForm(request.POST)
@@ -156,7 +162,7 @@ def delete_root(request, question_id):
         }
     )
     if question is None:
-        # LANZAR ERROR
+        messages.error(request, "Pregunta no encontrada")
         return redirect(reverse("root:questions"))
     mongo_question.delete_questions([question])
     return redirect(reverse("root:questions"))

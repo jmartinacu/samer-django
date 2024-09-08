@@ -3,6 +3,7 @@ import json
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.conf import settings
+from django.contrib import messages
 from bson import ObjectId
 
 from samer.utils import upload_file
@@ -140,7 +141,7 @@ def tag_details(request, tag_id):
 def question_details(request, question_id):
     question = mongo_question.parse_question(question_id)
     if question is None:
-        # LANZAR ERROR
+        messages.ero
         return redirect(reverse("root:questions"))
     return render(
         request,
@@ -150,7 +151,6 @@ def question_details(request, question_id):
 
 
 def create_admin(request):
-    error_messages = []
     if request.method == "POST":
         form = AdminForm(request.POST)
         if form.is_valid():
@@ -163,13 +163,11 @@ def create_admin(request):
             try:
                 users = mongo_user.find(query={"username": username})
                 if len(list(users)) > 0:
-                    error_messages.append("Nombre de usuario ya usado")
-                    # ERROR
+                    messages.warning(request, "El nombre de usuario ya existe")
                     return render(
                         request,
                         "root/users/create.html",
                         {
-                            "errors": error_messages,
                             "admin_form": form,
                         },
                     )
@@ -182,13 +180,12 @@ def create_admin(request):
                     admin=True,
                 )
                 return redirect(reverse("root:users"))
-            except Exception as e:  # pylint: disable=W0718
-                error_messages.append(f"Ocurrió un error inesperado: {e}")
+            except Exception as e:
+                messages.error(request, f"Algo ha fallado: {e}")
                 return render(
                     request,
                     "root/users/create.html",
                     {
-                        "errors": error_messages,
                         "admin_form": form,
                     },
                 )
@@ -198,7 +195,6 @@ def create_admin(request):
         request,
         "root/users/create.html",
         {
-            "errors": error_messages,
             "admin_form": form,
         },
     )
@@ -207,12 +203,8 @@ def create_admin(request):
 def user_details(request, user_id):
     user: ParsedUser | None = mongo_user.parsed_user(user_id)
     if user is None:
-        # LANZAR ERROR
-        return render(
-            request,
-            "root/users/users.html",
-            {"error": "User not found"},
-        )
+        messages.error(request, "Usuario no encontrado")
+        return redirect(reverse("root:users"))
     comments: list[ParsedComment] = mongo_comment.find(
         {
             "author": user_id,
@@ -231,12 +223,8 @@ def user_details(request, user_id):
 def post_details(request, post_id):
     post_db = mongo_post.parse_post(post_id)
     if post_db is None:
-        # LANZAR ERROR
-        return render(
-            request,
-            "root/posts/posts.html",
-            {"error": "Post not found"},
-        )
+        messages.error(request, "Publicación no encontrada")
+        return redirect(reverse("root:root"))
     comments = list(
         {
             "id": str(comment["_id"]),
@@ -269,7 +257,6 @@ def upload_post(request):
                 name=form.cleaned_data["name"],
                 des=form.cleaned_data["des"],
             )
-            # MANDAR MENSAJES CON INFORMACIÓN DE LO Q HA PASADO
             if "error" in result:
                 upload_post = render(
                     request,
@@ -277,19 +264,30 @@ def upload_post(request):
                     {"image_post_form": form},
                 )
                 if result["status"] == "DuplicateName":
-                    # NOMBRE DUPLICADO
+                    messages.warning(
+                        request,
+                        "Ya hay una publicación con ese nombre",
+                    )
                     return upload_post
                 elif result["status"] == "NotImageOrVideo":
-                    # ARCHIVO NO ES IMAGEN O VIDEO
+                    messages.warning(
+                        request,
+                        "El archivo tiene que ser una imagen o video",
+                    )
                     return upload_post
                 elif result["status"] == "MoreThanOneVideo":
-                    # SOLO SE PUEDE SUBIR UN VIDEO
+                    messages.warning(
+                        request,
+                        "Solamente se puede subir un video por publicación",
+                    )
                     return upload_post
                 elif result["status"] == "MixedVideoAndImage":
-                    # NO SE PUEDEN SUBIR VIDEOS Y IMAGENES
+                    messages.warning(
+                        request,
+                        "No se pueden subir videos e imágenes a la vez",
+                    )
                     return upload_post
                 else:
-                    # POR DEFECTO
                     return render("root:root")
             return redirect(
                 reverse("root:post_details", kwargs={"post_id": result["id"]})
@@ -312,7 +310,7 @@ def upload_post(request):
 def delete_post(request, post_id):
     post_db = mongo_post.find_one(query={"_id": ObjectId(post_id)})
     if post_db is None:
-        # LANZAR ERROR NO ENCONTRADO
+        messages.error(request, "Publicación no encontrada")
         return redirect(reverse("root:root"))
     mongo_post.delete_posts([post_db])
     return redirect(reverse("root:root"))
@@ -321,7 +319,7 @@ def delete_post(request, post_id):
 def edit_post(request, post_id):
     post_db = mongo_post.parse_post(post_id)
     if post_db is None:
-        # LANZAR ERROR NO ENCONTRADO
+        messages.error(request, "Publicación no encontrada")
         return redirect(reverse("root:root"))
     if request.method == "POST":
         form = EditPost(request.POST, request.FILES)
@@ -333,7 +331,6 @@ def edit_post(request, post_id):
                 name=form.cleaned_data["name"],
                 post=post_db,
             )
-            #  MANDAR MENSAJES CON INFORMACIÓN DE LO Q HA PASADO
             if "error" in result:
                 form = EditPost(post=post_db)
                 render_edit = render(
@@ -345,16 +342,24 @@ def edit_post(request, post_id):
                     },
                 )
                 if result["status"] == "NotImageOrVideo":
-                    # ARCHIVO NO ES IMAGEN O VIDEO
+                    messages.warning(
+                        request,
+                        "El archivo tiene que ser una imagen o video",
+                    )
                     return render_edit
                 elif result["status"] == "MoreThanOneVideo":
-                    # SOLO SE PUEDE SUBIR UN VIDEO
+                    messages.warning(
+                        request,
+                        "Solamente se puede subir un video por publicación",
+                    )
                     return render_edit
                 elif result["status"] == "MixedVideoAndImage":
-                    # NO SE PUEDEN SUBIR VIDEOS Y IMAGENES
+                    messages.warning(
+                        request,
+                        "No se pueden subir videos e imágenes a la vez",
+                    )
                     return render_edit
                 else:
-                    # POR DEFECTO
                     return render("root:root")
             return redirect(
                 reverse(
@@ -401,13 +406,16 @@ def delete_action(request, model):
     if request.method == "POST":
         referrer_url = request.META.get("HTTP_REFERER", "/")
         if model not in settings.AUTH_ACTION_MODELS:
-            # LANZAR NOTIFICACIÓN CON MODELO INCORRECTO
+            messages.error(request, "Acción no permitida")
             return redirect(referrer_url)
         data = json.loads(request.body)
         selected_ids = data.get("delete_ids", [])
         ids = list(map(ObjectId, selected_ids))
         if user_auth.user_auth["id"] in selected_ids:
-            # LANZAR NOTIFICACION NO PUEDES ELIMINAR TU MISMO
+            messages.warning(
+                request,
+                "No puedes borrar al usuario que realiza la acción",
+            )
             return redirect(referrer_url)
         if model == "User":
             mongo_user.delete_users(
@@ -425,9 +433,10 @@ def delete_action(request, model):
             mongo_question.delete_questions(
                 list(mongo_question.find(query={"_id": {"$in": ids}})),
             )
+        messages.success(request, "Acción completada")
         return redirect(referrer_url)
     else:
-        # DEVOLVER UNA NOTIFICACIÓN CON ACCIÓN INCORRECTA
+        messages.warning(request, "Acción incorrecta")
         return redirect(reverse("root:root"))
 
 

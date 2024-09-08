@@ -8,11 +8,6 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-    "django-insecure-lifiv!v&qwh$j*5$0cz#iizeesc7vf(y$eofl5u!y-82sb(^6n"  # noqa
-)
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -70,9 +65,9 @@ DATABASES = {"default": {}}
 
 # MongoDB
 
-CONNECTION_STRING = os.environ["CONNECTION_STRING"]
+CONNECTION_STRING = os.getenv("CONNECTION_STRING", "")
 
-DB_NAME = os.environ["DB_NAME"]
+DB_NAME = os.getenv("DB_NAME", "")
 
 
 # Password validation
@@ -124,9 +119,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # AWS S3
 
-AWS_BUCKET_NAME = os.environ["AWS_BUCKET_NAME"]
+AWS_BUCKET_NAME = os.getenv("AWS_BUCKET_NAME", "")
 
-AWS_DEFAULT_REGION = os.environ["AWS_DEFAULT_REGION"]
+AWS_DEFAULT_REGION = os.getenv("AWS_DEFAULT_REGION", "")
 
 # AUTH USER
 
@@ -165,6 +160,10 @@ AUTH_INCLUDE_PATHS = [
     },
     {
         "name": "questions:archive",
+        "type": "static",
+    },
+    {
+        "name": "home:home_edit_profile",
         "type": "static",
     },
 ]

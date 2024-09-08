@@ -1,5 +1,9 @@
+from django.urls import register_converter
 from django.urls import path, include
 
+from samer.samerproject.converters import ObjectIdConverter
+
+register_converter(ObjectIdConverter, "objectid")
 
 urlpatterns = [
     path("", include("home.urls", namespace="home")),

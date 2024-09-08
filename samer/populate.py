@@ -5,6 +5,7 @@ from pymongo import MongoClient
 from bson import ObjectId
 from dotenv import load_dotenv
 
+from samer.utils import get_tuple_list_env
 from samer.users.hashing import hash_password
 from samer.posts.utils import upload_thumbnail
 
@@ -12,6 +13,8 @@ load_dotenv()
 
 client = MongoClient(os.environ["CONNECTION_STRING"])
 db = client[os.environ["DB_NAME"]]
+
+env_users = get_tuple_list_env(os.getenv("POPULATE_USERS"))
 
 
 posts_data = [
@@ -254,8 +257,8 @@ users_data = [
         "name": "admin",
         "surname": "admin",
         "email": "admin@admin.com",
-        "username": "admin",
-        "password": hash_password("le`2YlIM!P!:1PWo5D+`)Nw^"),
+        "username": env_users[0][0],
+        "password": hash_password(env_users[0][1]),
     },
     {
         "_id": ObjectId(),
@@ -263,8 +266,8 @@ users_data = [
         "name": None,
         "surname": None,
         "email": None,
-        "username": "jmartinacu",
-        "password": hash_password("nNnZ0_=RrNXFV43yA.p6VYkK"),
+        "username": env_users[1][0],
+        "password": hash_password(env_users[1][1]),
     },
 ]
 

@@ -9,18 +9,18 @@ urlpatterns = [
     path("create/", views.create, name="create"),
     path("archive/", views.archive, name="archive"),
     path(
-        "create/answer/<str:question_id>/<str:edit>/",
+        "create/answer/<objectid:question_id>/<str:edit>/",
         views.create_answer,
         name="create_answer",
     ),
-    path("delete/<str:question_id>/", views.delete, name="delete"),
+    path("delete/<objectid:question_id>/", views.delete, name="delete"),
     path(
-        "delete/root/<str:question_id>/",
+        "delete/root/<objectid:question_id>/",
         views.delete_root,
         name="delete_root",
     ),
     path(
-        "like/<str:question_id>/",
+        "like/<objectid:question_id>/",
         views.add_remove_like,
         name="add_remove_like",
     ),

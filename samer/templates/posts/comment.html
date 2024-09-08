@@ -30,7 +30,7 @@
                 {% for comment in comments %}
                     <li>
                         <div class="comment-list-item">
-                            <strong>{{comment.author.name}}</strong>
+                            <strong>{{comment.author.username}}</strong>
                             {{comment.text}}
                         </div>
                         {% if user_auth.is_login and user_auth.user_auth.id == comment.author.id %}

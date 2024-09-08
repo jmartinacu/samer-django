@@ -1,22 +1,18 @@
 const textarea = document.getElementById('create-comment-form');
 
-function submitFormOnEnter(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault()
-        document.getElementById('createCommentForm').submit()
-    }
-}
-
 function textareaKeyEvents(event) {
-  if (event.key === 'Enter' && event.ctrlKey) {
-    event.preventDefault()
-    document.getElementById('createCommentForm').submit()
+  if (event.key === 'Enter' && event.shiftKey) {
+    event.preventDefault();
+    const start = this.selectionStart;
+    const end = this.selectionEnd;
+    const value = this.value;
+    this.value = value.substring(0, start) + '\n' + value.substring(end);
+    this.selectionStart = this.selectionEnd = start + 1;
   }
-}
-
-function autoResize(textarea) {
-    textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 'px';
+  else if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    document.getElementById('createCommentForm').submit();
+  }
 }
 
 textarea.addEventListener('keydown', textareaKeyEvents);

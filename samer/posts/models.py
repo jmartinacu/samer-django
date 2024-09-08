@@ -108,8 +108,17 @@ class Tag(MongoDBCollection):
         }
 
     def add_posts(self, tag: T, post_ids: list[str]):
-        if any(post_id in tag["posts"] for post_id in post_ids):
-            raise ValueError("Post already in tag")
+        dup_posts = [post_id for post_id in post_ids if post_id in tag["posts"]]  # noqa
+        if len(dup_posts) > 0:
+            posts_names = [
+                post["name"]
+                for post in db["Post"].find(
+                    {"_id": {"$in": dup_posts}},
+                )
+            ]
+            raise ValueError(
+                f"Las publicaciones {', '.join(posts_names)} ya están en la etiqueta"  # noqa
+            )
         self.update_one(
             filter={"_id": tag["_id"]},
             update={"$set": {"posts": tag["posts"] + post_ids}},

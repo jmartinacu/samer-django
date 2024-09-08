@@ -5,6 +5,7 @@ from io import BytesIO
 
 import magic
 import requests
+import imageio
 from PIL import Image
 
 from samer.utils import upload_file, delete_file
@@ -16,7 +17,7 @@ def upload_thumbnail(frame: int, video_url: str):
         "-i",
         video_url,
         "-vf",
-        f"select=eq(n\,{frame})",  # pylint: disable=W1401
+        f"select='eq(n,{frame})'",
         "-q:v",
         "3",
         "-f",
@@ -29,9 +30,7 @@ def upload_thumbnail(frame: int, video_url: str):
         command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False
     )
     if process.returncode != 0:
-        raise Exception(  # pylint: disable=W0719
-            f"ffmpeg error: {process.stderr.decode('utf-8')}"
-        )  # pylint: disable=W0719
+        raise Exception(f"ffmpeg error: {process.stderr.decode('utf-8')}")
     video_name = video_url.split("/")[-1]
     thumb_name, _thumb_ext = os.path.splitext(video_name)
     thumb_io = BytesIO(process.stdout)
@@ -69,34 +68,21 @@ def is_image(file_bytes):
 
 def is_video(file_bytes):
     try:
-        # Crea un archivo temporal
         with tempfile.NamedTemporaryFile(
-            suffix=".tmp",
+            suffix=".mp4",
             delete=True,
         ) as temp_file:
-            # Escribe los bytes en el archivo temporal
             temp_file.write(file_bytes)
             temp_file.flush()
-            # Ejecuta ffprobe en el archivo temporal
-            result = subprocess.run(
-                [
-                    "ffprobe",
-                    "-v",
-                    "error",
-                    "-select_streams",
-                    "v:0",
-                    "-show_entries",
-                    "stream=codec_type",
-                    "-of",
-                    "csv=p=0",
-                    temp_file.name,
-                ],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-            )
-            output = result.stdout.decode().strip()
-            # Verifica si el flujo de datos es de tipo 'video'
-            return output == "video"
-    except subprocess.CalledProcessError as e:
-        print(f"Error al ejecutar ffprobe: {e}")
+            reader = imageio.get_reader(temp_file.name)
+            try:
+                _ = reader.get_next_data()
+                is_video_file = True
+            except RuntimeError:
+                is_video_file = False
+            reader.close()
+            return is_video_file
+
+    except Exception as e:
+        print(f"Exception occurred: {e}")
         return False
