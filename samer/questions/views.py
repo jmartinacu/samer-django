@@ -80,6 +80,7 @@ def create(request):
 def delete(request, question_id):
     user_auth = UserAuth(request)
     if not user_auth.is_login():
+        messages.warning(request, "Necesitas tener una sesión")
         return redirect(reverse("users:login"))
     question = mongo_question.find_one(
         {
@@ -87,8 +88,10 @@ def delete(request, question_id):
         }
     )
     if question is None:
+        messages.error(request, "Pregunta no encontrada")
         return redirect(reverse("questions:questions"))
     if question["author"] != user_auth.user_auth["username"]:
+        messages.warning(request, "No tienes permisos para esta acción")
         return redirect(reverse("questions:questions"))
     mongo_question.delete_questions([question])
     return redirect(reverse("questions:questions"))
@@ -97,6 +100,7 @@ def delete(request, question_id):
 def add_remove_like(request, question_id):
     user_auth = UserAuth(request)
     if not user_auth.is_login():
+        messages.warning(request, "Necesitas tener una sesión")
         return redirect(reverse("users:login"))
     question = mongo_question.find_one(
         {
@@ -104,6 +108,7 @@ def add_remove_like(request, question_id):
         },
     )
     if question is None:
+        messages.error(request, "Pregunta no encontrada")
         return redirect(reverse("questions:questions"))
     mongo_question.add_or_remove_likes(
         question,

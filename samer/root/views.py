@@ -11,7 +11,6 @@ from samer.posts.models import (
     post as mongo_post,
     comment as mongo_comment,
     tag as mongo_tag,
-    ParsedComment,
 )
 from samer.posts.utils import get_mime_type_from_urls
 from samer.users.context_processors import UserAuth
@@ -141,7 +140,7 @@ def tag_details(request, tag_id):
 def question_details(request, question_id):
     question = mongo_question.parse_question(question_id)
     if question is None:
-        messages.ero
+        messages.error(request, "Pregunta no encontrado")
         return redirect(reverse("root:questions"))
     return render(
         request,
@@ -205,17 +204,41 @@ def user_details(request, user_id):
     if user is None:
         messages.error(request, "Usuario no encontrado")
         return redirect(reverse("root:users"))
-    comments: list[ParsedComment] = mongo_comment.find(
-        {
-            "author": user_id,
-        }
-    )
+    content = request.GET.get("content", "comments")
+    comments = None
+    questions = None
+    if content == "comments":
+        comments = list(
+            {
+                "id": str(comment["_id"]),
+                "post": mongo_post.parse_post(comment["post"]),
+                "created_at": comment["created_at"],
+                "text": comment["text"],
+            }
+            for comment in mongo_comment.find({"author": user_id})
+        )
+    elif content == "questions":
+        questions = list(
+            {
+                "id": str(question["_id"]),
+                "title": question["title"],
+                "resolve": question["resolve"],
+                "archive": question["archive"],
+                "likes": question["likes"],
+            }
+            for question in mongo_question.find({"author": user["username"]})
+        )
+    else:
+        messages.error(request, f"Opción {content} no es valida")
+        return redirect(reverse("root:user_details", args=[user_id]))
     return render(
         request,
         "root/users/user.html",
         {
             "user": user,
             "comments": comments,
+            "questions": questions,
+            "content": content,
         },
     )
 
@@ -314,6 +337,22 @@ def delete_post(request, post_id):
         return redirect(reverse("root:root"))
     mongo_post.delete_posts([post_db])
     return redirect(reverse("root:root"))
+
+
+def delete_user(request, user_id):
+    user = mongo_user.find_one({"_id": ObjectId(user_id)})
+    if user is None:
+        messages.error(request, "Usuario no encontrado")
+        return redirect(reverse("root:users"))
+    admins = list(mongo_user.find({"admin": True}))
+    if len(admins) == 1 and str(admins[0]["_id"]) == user_id:
+        messages.warning(
+            request,
+            "No se pueden eliminar todos los administradores",
+        )
+        return redirect(reverse("root:users"))
+    mongo_user.delete_users([user])
+    return redirect(reverse("root:users"))
 
 
 def edit_post(request, post_id):
@@ -490,3 +529,31 @@ def tag_action(request):
         )
     else:
         return redirect(reverse("root:root"))
+
+
+def remove_comment(request, user_id: str, post_id: str, comment_id: str):
+    post_db = mongo_post.find_one(query={"_id": ObjectId(post_id)})
+    if post_db is None:
+        messages.error(request, "Publicación no encontrada")
+        return redirect(reverse("root:user_details", args=[user_id]))
+    comment_db = mongo_comment.find_one({"_id": ObjectId(comment_id)})
+    if comment_db is None:
+        messages.error(request, "Comentario no encontrado")
+        return redirect(reverse("root:user_details", args=[user_id]))
+    mongo_comment.delete_comments([comment_db])
+    return redirect(reverse("root:user_details", args=[user_id]))
+
+
+def remove_question(request, user_id: str, question_id: str):
+    question = mongo_question.find_one(
+        {
+            "_id": ObjectId(question_id),
+        }
+    )
+    if question is None:
+        messages.error(request, "Pregunta no encontrada")
+        return redirect(reverse("questions:questions"))
+    mongo_question.delete_questions([question])
+    return redirect(
+        f"{reverse('root:user_details', args=[user_id])}?content=questions",
+    )

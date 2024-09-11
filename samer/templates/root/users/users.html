@@ -39,9 +39,7 @@
                     </td>
                     <td onclick="window.location.href='{% url 'root:user_details' user.id %}'">
                         {% if user.admin %}
-                            <strong>admin</strong>
-                        {% else %}
-                            usuario
+                            admin
                         {% endif %}
                     </td>
                     <td onclick="window.location.href='{% url 'root:user_details' user.id %}'">

@@ -27,6 +27,11 @@ urlpatterns = [
         name="delete_post",
     ),
     path(
+        "user/delete/<objectid:user_id>/",
+        views.delete_user,
+        name="delete_user",
+    ),
+    path(
         "tag/delete/<objectid:tag_id>/",
         views.delete_tag,
         name="delete_tag",
@@ -39,5 +44,15 @@ urlpatterns = [
         "question/<objectid:question_id>/",
         views.question_details,
         name="question_details",
+    ),
+    path(
+        "user/<objectid:user_id>/<objectid:question_id>/",
+        views.remove_question,
+        name="remove_question",
+    ),
+    path(
+        "user/<objectid:user_id>/<objectid:post_id>/<objectid:comment_id>/",
+        views.remove_comment,
+        name="remove_comment",
     ),
 ]
