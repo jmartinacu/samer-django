@@ -142,17 +142,17 @@ AUTH_INCLUDE_PATHS = [
     {
         "name": "posts:add_posts_tag",
         "type": "dynamic",
-        "args": ["dummy_id"],
+        "args": ["66dd91747f069f8dd89be45a"],
     },
     {
         "name": "questions:create_answer",
         "type": "dynamic",
-        "args": ["dummy_id", "dummy_edit"],
+        "args": ["66dd91747f069f8dd89be45a", "dummy_edit"],
     },
     {
         "name": "questions:delete_root",
         "type": "dynamic",
-        "args": ["dummy_id"],
+        "args": ["66dd91747f069f8dd89be45a"],
     },
     {
         "name": "posts:search_posts",
