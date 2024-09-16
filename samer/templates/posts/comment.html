@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load math %}
 
 {% block head %}
     <link rel="stylesheet" href={% static "/css/comment.css" %}>
@@ -46,8 +47,16 @@
                 <div class="textarea-container">
                     {{form.comment}}
                 </div>
+                <div>
+                    <button type="submit">Añadir Comentario</button>
+                    <a href="{% url 'posts:add_remove_like' post.id %}?redirect=posts:comment&type={% if post.type == 'image'%}image{% else %}video{% endif %}"><i class="material-icons">favorite</i></a>
+                </div>
             </form>
+            {% if user_auth.is_login and user_auth.user_auth.id in post.likes and post.likes|length > 2 %}
+                <p>Te gusta a ti y a <strong>{{post.likes|length|subtract:1}}</strong> personas</p>
+            {% elif post.likes|length > 0 %}
+                <p>Le gusta a <strong>{{post.likes|length}}</strong> {% if post.likes|length > 1 %}personas{% else %}persona{% endif %}</p>
+            {% endif %}
         </div>
     </div>
-    <script src={% static "javascript/comment.js" %}></script>
 {% endblock content %}

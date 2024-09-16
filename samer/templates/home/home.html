@@ -74,7 +74,7 @@
                 {% endif %}
 				<div class="gallery-item-info">
 					<ul>
-						<li class="gallery-item-likes"><span class="visually-hidden material-icons">Likes:</span><i class="fas fa-heart" aria-hidden="true"></i><a href="{% url 'posts:add_remove_like' post.id %}?type={% if post.type == "image" %}image{% else %}video{% endif %}">{{ post.likes|length }} <i class="material-icons">favorite</i></a></li>
+						<li class="gallery-item-likes"><span class="visually-hidden material-icons">Likes:</span><i class="fas fa-heart" aria-hidden="true"></i><a href="{% url 'posts:add_remove_like' post.id %}?redirect={% if post.type == "image" %}home:home_images{% else %}home:home_videos{% endif %}">{{ post.likes|length }} <i class="material-icons">favorite</i></a></li>
 						<li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i><a href="{% url 'posts:comment' post.id post.type %}">{{post.comments}} <i class="material-icons">chat_bubble</i></a></li>
 					</ul>
 				</div>

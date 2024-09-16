@@ -132,7 +132,6 @@ img {
     flex: 1 0 22rem;
     margin: 1rem;
     color: #fff;
-    cursor: pointer;
 }
 
 .gallery-item:hover .gallery-item-info,

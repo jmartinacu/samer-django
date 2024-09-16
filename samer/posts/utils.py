@@ -1,14 +1,14 @@
-import subprocess
 import os
+import subprocess
 import tempfile
 from io import BytesIO
 
+import imageio
 import magic
 import requests
-import imageio
 from PIL import Image
 
-from samer.utils import upload_file, delete_file
+from samer.utils import delete_file, upload_file
 
 
 def upload_thumbnail(frame: int, video_url: str):

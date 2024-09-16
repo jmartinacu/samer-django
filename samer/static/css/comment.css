@@ -10,7 +10,6 @@ main {
     height: 100vh;
 }
 
-
 .comment-container {
     height: 100vh;
     display: grid;
@@ -36,8 +35,8 @@ main {
     align-self: center;
     justify-self: center;
     border: 2px solid #ccc;
-    width: 350px;
-    max-height: 500px;
+    width: 360px;
+    max-height: 550px;
     border-radius: 20px;
     padding: 10px;
     display: flex;
@@ -79,7 +78,7 @@ h3:last-of-type {
 }
 
 .comment-form {
-    max-height: 100px;
+    max-height: 110px;
     overflow-y: auto;
     padding: 5px;
 }
@@ -91,4 +90,21 @@ h3:last-of-type {
     padding: 5px;
     resize: none;
     background-color: var(--tertiary-color);
+}
+
+.comment-form button {
+    margin-top: 5px;
+    background-color: var(--background-color);
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    padding: 5px;
+}
+
+.comment-form button:hover {
+    border-color: var(--accent-color);
+}
+
+.comment-form a {
+    color: var(--secondary-color);
+    margin-left: 10px;
 }

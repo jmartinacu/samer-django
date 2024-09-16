@@ -77,7 +77,6 @@ main {
     background-color: #f1f1f1;
     border-radius: 12px;
     border: 2px solid var(--accent-color);
-    cursor: pointer;
 }
 
 .delete-button {
@@ -88,6 +87,5 @@ main {
 }
 
 .delete-button:hover {
-    cursor: pointer;
     border-color: var(--accent-color);
 }

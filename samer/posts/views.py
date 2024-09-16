@@ -1,42 +1,51 @@
 import json
 
-from django.shortcuts import render, redirect
-from django.urls import reverse
-from django.http import JsonResponse
-from django.contrib import messages
 from bson import ObjectId
+from django.contrib import messages
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse
 
 from samer.posts.forms import CreateCommentForm
-from samer.posts.models import (
-    Post,
-    post as mongo_post,
-    comment as mongo_comment,
-    tag as mongo_tag,
-)
+from samer.posts.models import Post
+from samer.posts.models import comment as mongo_comment
+from samer.posts.models import post as mongo_post
+from samer.posts.models import tag as mongo_tag
 from samer.posts.utils import get_mime_type_from_urls
 from samer.users.context_processors import UserAuth
 from samer.users.models import user as mongo_user
 
 
 def add_remove_like(request, post_id):
+    allows_redirects = [
+        "home:home_images",
+        "home:home_videos",
+        "posts:comment",
+    ]
     user_auth = UserAuth(request)
-    type = request.GET.get("type", "image")
+    redirect_view = request.GET.get("redirect", "home:home_images")
+    post_type = None
+    if redirect_view not in allows_redirects:
+        messages.error(request, f"Redirección {redirect_view} no permitida")
+    if redirect_view == "posts:comment":
+        post_type: str = request.GET.get("type", "")
+        if post_type == "" or post_type not in ["image", "video"]:
+            messages.error(request, "Tipo de publicación incorrecto")
+            return redirect(reverse("home:home_images"))
+    post: Post | None = mongo_post.find_one(query={"_id": ObjectId(post_id)})
+    if post is None:
+        messages.error(request, "Publicación no encontrada")
+        if post_type:
+            return redirect(reverse(redirect_view, args=[post_id, post_type]))
+        return redirect(reverse(redirect_view))
     if not user_auth.is_login():
         messages.warning(
             request,
             "Tienes tener una cuenta para dar un me gusta",
         )
-        if type == "video":
-            return redirect(reverse("home:home_videos"))
-        elif type == "image":
-            return redirect(reverse("home:home_images"))
-    post: Post | None = mongo_post.find_one(query={"_id": ObjectId(post_id)})
-    if post is None:
-        messages.error(request, "Publicación no encontrada")
-        if "videos" in request.path:
-            return redirect(reverse("home:home_videos"))
-        else:
-            return redirect(reverse("home:home_images"))
+        if post_type:
+            return redirect(reverse(redirect_view, args=[post_id, post_type]))
+        return redirect(reverse(redirect_view))
     if user_auth.user_auth["id"] in post["likes"]:
         mongo_post.update_one(
             filter={"_id": ObjectId(post_id)},
@@ -57,10 +66,9 @@ def add_remove_like(request, post_id):
                 "$set": {"likes": post["likes"] + [user_auth.user_auth["id"]]},
             },
         )
-    if post["type"] == "image":
-        return redirect(reverse("home:home_images"))
-    else:
-        return redirect(reverse("home:home_videos"))
+    if post_type:
+        return redirect(reverse(redirect_view, args=[post_id, post_type]))
+    return redirect(reverse(redirect_view))
 
 
 # CREAR UN VALIDADOR CUSTOM DEL POST_ID QUE SEA UN OBJECTID VALIDO
