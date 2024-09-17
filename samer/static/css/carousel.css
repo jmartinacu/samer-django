@@ -45,8 +45,7 @@
 }
 
 .carousel-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    display: none;
 }
 
 .carousel-images img {

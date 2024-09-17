@@ -11,14 +11,14 @@
 
 {% block header %}
     <section class="questions-header">
-        <h2>Publica tus preocupaciones y encuentra respuestas</h1>
+        <h2>Comparte tus preguntas y encuentra respuestas</h1>
         <div class="search-questions">
             <input type="search" name="search-quesitons" id="search-questions" placeholder="Busca alguna pregunta...">
             <div class="dropdown">
                 <button class="dropbtn" onmouseover="showOptions()">Busca por: <strong class="search-criteria">Titulo</strong></button>
                 <div class="dropdown-content"></div>
             </div>
-            <a href="{% url "questions:create" %}"><i class="material-icons">add</i></a>
+            <a class="create-question" href="{% url "questions:create" %}">Crear Pregunta</a>
         </div>
     </section>
 {% endblock header %}

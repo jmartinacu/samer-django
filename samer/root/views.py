@@ -1,32 +1,24 @@
 import json
 
-from django.shortcuts import render, redirect
-from django.urls import reverse
+from bson import ObjectId
 from django.conf import settings
 from django.contrib import messages
-from bson import ObjectId
+from django.shortcuts import redirect, render
+from django.urls import reverse
 
-from samer.utils import upload_file
-from samer.posts.models import (
-    post as mongo_post,
-    comment as mongo_comment,
-    tag as mongo_tag,
-)
+from samer.posts.models import comment as mongo_comment
+from samer.posts.models import post as mongo_post
+from samer.posts.models import tag as mongo_tag
 from samer.posts.utils import get_mime_type_from_urls
-from samer.users.context_processors import UserAuth
-from samer.users.models import (
-    user as mongo_user,
-    ParsedUser,
-)
-from samer.users import hashing
 from samer.questions.models import question as mongo_question
-from samer.root.forms import (
-    UploadPost,
-    EditPost,
-    AdminForm,
-    CreateTag,
-)
-from samer.root.utils import create_post, edit_post as edit_post_utility
+from samer.root.forms import AdminForm, CreateTag, EditPost, UploadPost
+from samer.root.utils import create_post
+from samer.root.utils import edit_post as edit_post_utility
+from samer.users import hashing
+from samer.users.context_processors import UserAuth
+from samer.users.models import ParsedUser
+from samer.users.models import user as mongo_user
+from samer.utils import upload_file
 
 
 def root(request):
@@ -104,6 +96,8 @@ def questions(request):
             "resolve": question["resolve"],
             "archive": question["archive"],
             "likes": question["likes"],
+            "tags": question["tags"],
+            "views": question["views"],
         }
         for question in mongo_question.find(query={})
     ]
@@ -225,6 +219,8 @@ def user_details(request, user_id):
                 "resolve": question["resolve"],
                 "archive": question["archive"],
                 "likes": question["likes"],
+                "tags": question["tags"],
+                "views": question["views"],
             }
             for question in mongo_question.find({"author": user["username"]})
         )

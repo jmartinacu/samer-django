@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% load math %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "css/question.css" %}>
+{% endblock head %}
+
+{% block title %}SAMER{% endblock title %}
+
+
+{% block header %}
+    <section class="question-header">
+        <h1>{{question.title}}</h1>
+        <br>
+        <p>{{question.content}}</p>
+    </section>
+{% endblock header %}
+
+{% block content %}
+    <section class="question-content">
+        <div class="question-likes">
+            <a href="{% url "questions:add_remove_like" question.id %}">
+                <i class="material-icons md-60" {% if user_auth.is_login and user_auth.user_auth.id in question.likes %}style="color: var(--secondary-color);"{% endif %}>favorite</i>
+            </a>
+        </div>
+        <div class="question-answer">
+            <h1>Respuesta:</h1>
+            <br>
+            <p>{{question.answer.text}}</p>
+            <br>
+            <div>
+                {% if user_auth.is_login and user_auth.user_auth.id in question.likes and question.likes|length > 2 %}
+                    <p>Te gusta a ti y a <strong>{{question.likes|length|subtract:1}}</strong> personas</p>
+                {% elif question.likes|length > 0 %}
+                    <p>Le gusta a <strong>{{question.likes|length}}</strong> {% if question.likes|length > 1 %}personas{% else %}persona{% endif %}</p>
+                {% endif %}
+                <p>Vista <strong>{{question.views|length}}</strong> veces</p>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

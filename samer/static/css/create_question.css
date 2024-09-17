@@ -1,0 +1,42 @@
+#tags-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px;
+    cursor: text;
+}
+
+#tags-input-container input {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 5px;
+    min-width: 100px;
+}
+
+.tag-item {
+    display: inline-flex;
+    align-items: center;
+    background-color: #e0e0e0;
+    padding: 5px;
+    border-radius: 12px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+.tag-item button {
+    background: none;
+    border: none;
+    margin-left: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #333;
+}
+
+.tag-item button:hover {
+    color: var(--accent-color);
+}
+
+.fixed {
+    transform: translateY(-35px) translateX(10px) scale(0.75);
+}

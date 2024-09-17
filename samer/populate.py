@@ -1,13 +1,13 @@
 import os
 from datetime import datetime
 
-from pymongo import MongoClient
 from bson import ObjectId
 from dotenv import load_dotenv
+from pymongo import MongoClient
 
-from samer.utils import get_tuple_list_env
-from samer.users.hashing import hash_password
 from samer.posts.utils import upload_thumbnail
+from samer.users.hashing import hash_password
+from samer.utils import get_tuple_list_env
 
 load_dotenv()
 
@@ -376,6 +376,8 @@ questions_data = [
             "text": "Hay varias maneras de mejorar los hábitos saludables, una de ellas es hacer ejercicio, para exponerte a la luz del sol y que tu cuerpo se active. También puedes abstenerte de tomar café en las dos primeras horas de la mañana para que tu cuerpo recupere su ciclo normal naturalmente.",
         },
         "likes": [],
+        "tags": ["salud", "habitos", "mañana"],
+        "views": [],
     },
     {
         "_id": ObjectId(),
@@ -386,6 +388,8 @@ questions_data = [
         "archive": False,
         "answer": None,
         "likes": [],
+        "tags": ["aprender", "idiomas", "mejorar"],
+        "views": [],
     },
     {
         "_id": ObjectId(),
@@ -396,6 +400,8 @@ questions_data = [
         "archive": False,
         "answer": None,
         "likes": [],
+        "tags": ["tiempo", "habitos"],
+        "views": [],
     },
     {
         "_id": ObjectId(),
@@ -409,6 +415,8 @@ questions_data = [
             "text": "Puedes preparar ensaladas con proteínas como pollo a la parrilla, tofu o atún. También, recetas de salteados con verduras y arroz integral son rápidas y saludables.",
         },
         "likes": [],
+        "tags": ["salud", "cocina", "alimentación"],
+        "views": [],
     },
     {
         "_id": ObjectId(),
@@ -419,6 +427,8 @@ questions_data = [
         "archive": False,
         "answer": None,
         "likes": [],
+        "tags": ["salud", "sueño", "mejora"],
+        "views": [],
     },
     {
         "_id": ObjectId(),
@@ -429,6 +439,8 @@ questions_data = [
         "archive": False,
         "answer": None,
         "likes": [],
+        "tags": ["salud", "ejercicio"],
+        "views": [],
     },
     {
         "_id": ObjectId(),
@@ -439,6 +451,8 @@ questions_data = [
         "archive": False,
         "answer": None,
         "likes": [],
+        "tags": ["desarrollo"],
+        "views": [],
     },
     {
         "_id": ObjectId(),
@@ -449,6 +463,8 @@ questions_data = [
         "archive": False,
         "answer": None,
         "likes": [],
+        "tags": ["salud", "estrés"],
+        "views": [],
     },
     {
         "_id": ObjectId(),
@@ -459,6 +475,8 @@ questions_data = [
         "archive": False,
         "answer": None,
         "likes": [],
+        "tags": [],
+        "views": [],
     },
     {
         "_id": ObjectId(),
@@ -472,6 +490,8 @@ questions_data = [
             "text": "Asegúrate de que tu planta reciba la cantidad adecuada de luz, agua y nutrientes. Investiga las necesidades específicas de cada tipo de planta y ajusta su cuidado en consecuencia.",
         },
         "likes": [],
+        "tags": ["habitos"],
+        "views": [],
     },
 ]
 

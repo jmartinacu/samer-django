@@ -1,4 +1,4 @@
-from typing import Union, TypedDict, TypeVar
+from typing import TypedDict, TypeVar, Union
 
 from bson import ObjectId
 
@@ -21,6 +21,8 @@ class ParsedQuestion(TypedDict):
     archive: bool
     answer: Union[AnswerQuestion, None]
     likes: list[str]
+    tags: list[str]
+    views: list[str]
 
 
 class Question(MongoDBCollection):
@@ -31,6 +33,8 @@ class Question(MongoDBCollection):
     archive: bool
     answer: Union[AnswerQuestion, None]
     likes: list[str]
+    tags: list[str]
+    views: list[str]
 
     def create(
         self,
@@ -41,6 +45,8 @@ class Question(MongoDBCollection):
         archive: bool = False,
         answer: Union[AnswerQuestion, None] = None,
         likes: list[str] = [],
+        tags: list[str] = [],
+        views: list[str] = [],
     ):
         question = {
             "_id": ObjectId(),
@@ -51,6 +57,8 @@ class Question(MongoDBCollection):
             "archive": archive,
             "answer": answer,
             "likes": likes,
+            "tags": tags,
+            "views": views,
         }
         res = self.collection.insert_one(question)
         return res
@@ -71,6 +79,8 @@ class Question(MongoDBCollection):
             "archive": question["archive"],
             "answer": question["answer"],
             "likes": question["likes"],
+            "tags": question["tags"],
+            "views": question["views"],
         }
 
     def get_questions_sorted_by_likes(
@@ -96,6 +106,23 @@ class Question(MongoDBCollection):
             filter={"_id": question["_id"]},
             update={"$set": {"likes": users_like}},
         )
+
+    def add_view(self, question: Q | ParsedQuestion, user_id: str):
+        question_id = (
+            ObjectId(
+                question["id"],
+            )
+            if "id" in question
+            else question["_id"]
+        )
+        views = question["likes"] + [user_id]
+        self.update_one(
+            filter={"_id": question_id},
+            update={
+                "$set": {"views": views},
+            },
+        )
+        return views
 
     def add_answer(self, question_id: str, answer: AnswerQuestion):
         self.update_one(

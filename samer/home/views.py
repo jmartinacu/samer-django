@@ -1,16 +1,15 @@
 from bson import ObjectId
-
-from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from samer.utils import upload_file, delete_file
-from samer.home.models import profile as mongo_profile
 from samer.home.forms import ProfileForm
-from samer.posts.models import (
-    post as mongo_post,
-    comment as mongo_comment,
-    tag as mongo_tag,
-)
+from samer.home.models import profile as mongo_profile
+from samer.posts.models import comment as mongo_comment
+from samer.posts.models import post as mongo_post
+from samer.posts.models import tag as mongo_tag
+from samer.utils import delete_file, upload_file
 
 
 def home_images(request):
@@ -153,3 +152,22 @@ def home_tag(request, tag_id: str):
             "tags": tags,
         },
     )
+
+
+def add_message(request):
+    level_msg = request.GET.get("level", "info")
+    message = request.GET.get("message", "")
+    if message == "":
+        return JsonResponse(
+            {"status": "error", "msg": "Message mandatory"},
+            status=400,
+        )
+    level = messages.INFO
+    if level_msg == "success":
+        level = messages.SUCCESS
+    if level_msg == "warning":
+        level = messages.WARNING
+    if level_msg == "error":
+        level = messages.ERROR
+    messages.add_message(request, level, message)
+    return JsonResponse({"status": "ok"})

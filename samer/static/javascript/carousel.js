@@ -25,9 +25,7 @@ function carouselScrollLeft() {
 }
 
 function updateButtons() {
-    console.log("SCROOL AMOUTN: ", scrollAmount)
-    console.log("CAROUSEL SCROLL WIDHT: ", carousel.scrollWidth)
-    console.log("CAROUSEL CLIENT WIDHT: ", carousel.clientWidth)
+    console.log()
     document.querySelector('.prev').disabled = scrollAmount <= 0;
     document.querySelector('.next').disabled = scrollAmount >= carousel.scrollWidth - carousel.clientWidth;
 }

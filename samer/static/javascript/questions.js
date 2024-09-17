@@ -12,6 +12,7 @@ const searchOptions = {
     Autor: '<button onclick="handleOption(this)">Autor</button>',
     Contenido: '<button onclick="handleOption(this)">Contenido</button>',
     Titulo: '<button onclick="handleOption(this)">Titulo</button>',
+    Etiqueta: '<button onclick="handleOption(this)">Etiqueta</button>',
 };
 
 searchBar.addEventListener('keyup', function(event) {
@@ -48,6 +49,8 @@ function searchQuestions() {
         option = "content";
     } else if (html_option === "Titulo") {
         option = "title";
+    } else if (html_option === "Etiqueta") {
+        option = "tag";
     }
     let search = searchBar.value;
     if (option === "resolved") {
@@ -68,21 +71,12 @@ function searchQuestions() {
         } else {
             return Error('No se encontró la sección de preguntas');
         }
-        // window.location.reload();
     })
     .catch((error) => {
         console.error('Error:', error);
     });
 };
 
-function showAnswer(div, answer) {
-    const answerContainer = div.querySelector('.question-answer');
-    const answerParagraph = answerContainer.querySelector('p');
-    if (answerContainer.style.display === 'block') {
-        answerContainer.style.display = 'none';
-        answerParagraph.textContent = '';
-    } else {
-        answerContainer.style.display = 'block';
-        answerParagraph.textContent = answer;
-    }
+function showAnswer(question_id) {
+    window.location.href = `${protocol}//${hostname}:${port}/questions/${question_id}`
 }

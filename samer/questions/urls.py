@@ -8,6 +8,7 @@ urlpatterns = [
     path("", views.questions, name="questions"),
     path("create/", views.create, name="create"),
     path("archive/", views.archive, name="archive"),
+    path("<objectid:question_id>/", views.question, name="question"),
     path(
         "create/answer/<objectid:question_id>/<str:edit>/",
         views.create_answer,

@@ -3,6 +3,7 @@
 
 {% block head %}
     <link rel="stylesheet" href={% static "css/login.css" %}>
+    <link rel="stylesheet" href={% static "css/create_question.css" %}>
 {% endblock head %}
 
 {% block title %}SAMER QUESTIONS{% endblock title %}
@@ -23,6 +24,12 @@
                 <div class="cut"></div>
                 <label for="content" class="placeholder">Pregunta</label>
             </div>
+            <div id="tags-input-container" class="input-container ic2">
+                <input type="text" id="tag-input" placeholder=" " class="input">
+                <div class="cut"></div>
+                <label id="tag-label" for="tag-input" class="placeholder">Escribe una etiqueta y pulsa Enter</label>
+            </div>
+            {{form.tags}}
             {{form.author}}
             {% for error in errors %}
                 <p>{{error}}</p>
@@ -30,4 +37,5 @@
             <button type="submit" class="submit">Crea una pregunta</button>
         </form>
     </div>
+    <script src={% static "javascript/create_question.js" %}></script>
 {% endblock content %}

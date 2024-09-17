@@ -1,12 +1,12 @@
 import json
 
 from bson import ObjectId
-from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.contrib import messages
+from django.shortcuts import redirect, render
+from django.urls import reverse
 
+from samer.questions.forms import CreateQuestionAnswerForm, CreateQuestionForm
 from samer.questions.models import question as mongo_question
-from samer.questions.forms import CreateQuestionForm, CreateQuestionAnswerForm
 from samer.users.context_processors import UserAuth
 
 
@@ -19,6 +19,8 @@ def questions(request):
         query = {"content": {"$regex": f"{search}", "$options": "i"}}
     elif option == "title":
         query = {"title": {"$regex": f"{search}", "$options": "i"}}
+    elif option == "tag":
+        query = {"tags": {"$in": [f"{search}"]}}
     elif option == "resolved":
         query = {"resolve": True}
     else:
@@ -35,6 +37,8 @@ def questions(request):
             "resolve": q["resolve"],
             "answer": q["answer"]["text"] if q["answer"] else None,
             "likes": q["likes"],
+            "tags": q["tags"],
+            "views": q["views"],
         }
         for q in list(questions_db)
     ]
@@ -43,6 +47,25 @@ def questions(request):
         "questions/questions_content.html",
         {"questions": questions},
     )
+
+
+def question(request, question_id):
+    user_auth = UserAuth(request)
+    question = mongo_question.parse_question(question_id)
+    if question is None:
+        messages.error(
+            request,
+            "Pregunta no encontrada",
+        )
+        return redirect(reverse("questions:questions"))
+    if user_auth.is_login():
+        if user_auth.user_auth["id"] not in question["views"]:
+            views = mongo_question.add_view(
+                question,
+                user_auth.user_auth["id"],
+            )
+            question["views"] = views
+    return render(request, "questions/question.html", {"question": question})
 
 
 def create(request):
@@ -58,7 +81,9 @@ def create(request):
         if form.is_valid():
             title = form.cleaned_data["title"]
             content = form.cleaned_data["content"]
+            tags: str = form.cleaned_data["tags"]
             author = form.cleaned_data["author"]
+            tags = tags.split(",")
             unresolved_questions = mongo_question.get_unresolved(
                 username=author,
             )
@@ -68,12 +93,20 @@ def create(request):
                     "No se puede crear una nueva pregunta, ya hay una en curso",  # noqa
                 )
                 return redirect(reverse("questions:questions"))
-            mongo_question.create(title=title, content=content, author=author)
+            mongo_question.create(
+                title=title, content=content, author=author, tags=tags
+            )
             return redirect(reverse("questions:questions"))
         else:
             return render(request, "questions/create.html", {"form": form})
     else:
-        form = CreateQuestionForm(username=user_auth.user_auth["username"])
+        title = request.GET.get("title", None)
+        content = request.GET.get("content", None)
+        form = CreateQuestionForm(
+            title=title,
+            content=content,
+            username=user_auth.user_auth["username"],
+        )
         return render(request, "questions/create.html", {"form": form})
 
 
@@ -114,7 +147,7 @@ def add_remove_like(request, question_id):
         question,
         [user_auth.user_auth["id"]],
     )
-    return redirect(reverse("questions:questions"))
+    return redirect(reverse("questions:question", args=[question_id]))
 
 
 def create_answer(request, question_id, edit):
