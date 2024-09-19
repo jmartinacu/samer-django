@@ -30,6 +30,9 @@
                     <a class="question-action" onclick="archiveAction(['{{question.id}}']); return false;">
                         {% if not question.archive %}Archivar{% else %}Desarchivar{% endif %}
                     </a>
+                    <a class="question-action" href="{% url "questions:toxic" question.id %}">
+                        {% if not question.toxic %}Marcar tóxica{% else %}Marcar no tóxica{% endif %}
+                    </a>
                 </div>
             </div>
         </div>
@@ -50,6 +53,7 @@
             {% if question.tags|length > 0 %}
                 <span><h4>Etiquetas:</h4><p> {{question.tags|join:', '}}</p></span>
             {% endif %}
+            <span><h4>Tóxica:</h4><p> {% if question.toxic %}Si{% else %}No{% endif %}</p></span>
         </div>
     </section>
     <script>

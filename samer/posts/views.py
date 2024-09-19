@@ -11,9 +11,9 @@ from samer.posts.models import Post
 from samer.posts.models import comment as mongo_comment
 from samer.posts.models import post as mongo_post
 from samer.posts.models import tag as mongo_tag
+from samer.posts.tasks import detoxify_comments
 from samer.posts.utils import get_mime_type_from_urls
 from samer.users.context_processors import UserAuth
-from samer.users.models import user as mongo_user
 
 
 def add_remove_like(request, post_id):
@@ -110,27 +110,15 @@ def comments(request, post_id: str, post_type: str):
         "id": str(post_db["_id"]),
         "name": post_db["name"],
         "urls": post_db["urls"],
-        "comments": mongo_comment.count(
-            query={"post": str(post_db["_id"])},
-        ),
         "likes": post_db["likes"],
         "description": post_db["description"],
         "type": post_db["type"],
         "mime_type": get_mime_type_from_urls(post_db["urls"]),
     }
     comment_form = CreateCommentForm()
-    comments = [
-        {
-            "id": str(comment["_id"]),
-            "post": comment["post"],
-            "author": mongo_user.parsed_user(
-                comment["author"],
-            ),
-            "created_at": comment["created_at"],
-            "text": comment["text"],
-        }
-        for comment in mongo_comment.find(query={"post": post_id})
-    ]
+    comments = mongo_comment.parse_comments(
+        list(mongo_comment.find(query={"post": post_id, "toxic": False})),
+    )
     return render(
         request,
         template,
@@ -164,27 +152,15 @@ def remove_comment(request, post_id: str, comment_id: str):
         "id": str(post_db["_id"]),
         "name": post_db["name"],
         "urls": post_db["urls"],
-        "comments": mongo_comment.count(
-            query={"post": str(post_db["_id"])},
-        ),
         "likes": post_db["likes"],
         "description": post_db["description"],
         "type": post_db["type"],
         "mime_type": get_mime_type_from_urls(post_db["urls"]),
     }
     comment_form = CreateCommentForm()
-    comments = [
-        {
-            "id": str(comment["_id"]),
-            "post": comment["post"],
-            "author": mongo_user.parsed_user(
-                comment["author"],
-            ),
-            "created_at": comment["created_at"],
-            "text": comment["text"],
-        }
-        for comment in mongo_comment.find(query={"post": post_id})
-    ]
+    comments = mongo_comment.parse_comments(
+        list(mongo_comment.find(query={"post": post_id, "toxic": False})),
+    )
     template = "posts/image.html"
     if post_db["type"] == "video":
         template = "posts/video.html"
@@ -234,3 +210,12 @@ def add_post_to_tag(request, tag_id: str):
         except ValueError as e:
             messages.warning(request, str(e))
             return redirect(reverse("root:tags"))
+
+
+def test_detoxify_comments(request):
+    comments = mongo_comment.parse_comments(
+        list(mongo_comment.find(query={}, limit=10))
+    )
+    print(comments)
+    detoxify_comments.delay(comments)
+    return redirect(reverse("home:home_images"))

@@ -25,6 +25,7 @@ def questions(request):
         query = {"resolve": True}
     else:
         query = {}
+    query["toxic"] = False
     questions_db = mongo_question.get_questions_sorted_by_likes(
         query=query,
     )
@@ -212,3 +213,12 @@ def archive(request):
         question_ids = data.get("question_ids", [])
         mongo_question.archive_unarchive_questions(question_ids)
         return redirect(reverse("root:questions"))
+
+
+def add_remove_toxic(request, question_id: str):
+    question = mongo_question.parse_question(question_id)
+    if question is None:
+        messages.error(request, "Pregunta no encontrada")
+        return redirect(reverse("root:questions"))
+    mongo_question.add_remove_toxic([question])
+    return redirect(reverse("root:question_details", args=[question_id]))

@@ -34,7 +34,7 @@
                             <strong>{{comment.author.username}}</strong>
                             {{comment.text}}
                         </div>
-                        {% if user_auth.is_login and user_auth.user_auth.id == comment.author.id %}
+                        {% if user_auth.is_login and user_auth.user_auth.id == comment.author %}
                             <a href="{% url "posts:remove_comment" post.id comment.id %}"><i class="material-icons">delete</i></a>
                         {% endif %}
                     </li>
@@ -58,5 +58,6 @@
                 <p>Le gusta a <strong>{{post.likes|length}}</strong> {% if post.likes|length > 1 %}personas{% else %}persona{% endif %}</p>
             {% endif %}
         </div>
+        <a href="{% url "posts:test_comments" %}">TEST DETOXIFY</a>
     </div>
 {% endblock content %}

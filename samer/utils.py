@@ -2,10 +2,10 @@ import os
 from ast import literal_eval
 
 import boto3
-from pymongo import MongoClient
-from pymongo.collection import Collection
 from bson import ObjectId
 from dotenv import load_dotenv
+from pymongo import MongoClient
+from pymongo.collection import Collection
 
 load_dotenv()
 

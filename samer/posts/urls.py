@@ -5,6 +5,7 @@ from samer.posts import views
 app_name = "posts"
 
 urlpatterns = [
+    path("test/comment/", views.test_detoxify_comments, name="test_comments"),
     path(
         "like/<objectid:post_id>/",
         views.add_remove_like,

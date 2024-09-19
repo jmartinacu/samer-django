@@ -88,19 +88,9 @@ def tags(request):
 
 
 def questions(request):
-    questions = [
-        {
-            "id": str(question["_id"]),
-            "title": question["title"],
-            "author": question["author"],
-            "resolve": question["resolve"],
-            "archive": question["archive"],
-            "likes": question["likes"],
-            "tags": question["tags"],
-            "views": question["views"],
-        }
-        for question in mongo_question.find(query={})
-    ]
+    questions = mongo_question.parse_questions(
+        list(mongo_question.find(query={})),
+    )
     return render(
         request,
         "root/questions/questions.html",

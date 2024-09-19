@@ -19,6 +19,8 @@ class ParsedQuestion(TypedDict):
     author: str
     resolve: bool
     archive: bool
+    toxic: bool
+    moderate: bool
     answer: Union[AnswerQuestion, None]
     likes: list[str]
     tags: list[str]
@@ -31,6 +33,8 @@ class Question(MongoDBCollection):
     author: str
     resolve: bool
     archive: bool
+    toxic: bool
+    moderate: bool
     answer: Union[AnswerQuestion, None]
     likes: list[str]
     tags: list[str]
@@ -43,6 +47,8 @@ class Question(MongoDBCollection):
         author: str,
         resolve: bool = False,
         archive: bool = False,
+        toxic: bool = False,
+        moderate: bool = False,
         answer: Union[AnswerQuestion, None] = None,
         likes: list[str] = [],
         tags: list[str] = [],
@@ -55,6 +61,8 @@ class Question(MongoDBCollection):
             "author": author,
             "resolve": resolve,
             "archive": archive,
+            "toxic": toxic,
+            "moderate": moderate,
             "answer": answer,
             "likes": likes,
             "tags": tags,
@@ -63,25 +71,30 @@ class Question(MongoDBCollection):
         res = self.collection.insert_one(question)
         return res
 
-    def parse_question(
-        self,
-        question_id: str,
-    ) -> Union[ParsedQuestion, None]:
+    def _parse(self, question):
+        return ParsedQuestion(
+            id=str(question["_id"]),
+            title=question["title"],
+            content=question["content"],
+            author=question["author"],
+            resolve=question["resolve"],
+            archive=question["archive"],
+            toxic=question["toxic"],
+            moderate=question["moderate"],
+            answer=question["answer"],
+            likes=question["likes"],
+            tags=question["tags"],
+            views=question["views"],
+        )
+
+    def parse_questions(self, questions: list[Q]):
+        return list(map(self._parse, questions))
+
+    def parse_question(self, question_id: str):
         question = self.collection.find_one({"_id": ObjectId(question_id)})
         if question is None:
             return None
-        return {
-            "id": str(question["_id"]),
-            "title": question["title"],
-            "content": question["content"],
-            "author": question["author"],
-            "resolve": question["resolve"],
-            "archive": question["archive"],
-            "answer": question["answer"],
-            "likes": question["likes"],
-            "tags": question["tags"],
-            "views": question["views"],
-        }
+        return self._parse(question)
 
     def get_questions_sorted_by_likes(
         self,
@@ -136,9 +149,42 @@ class Question(MongoDBCollection):
         )
 
     def delete_questions(self, questions: list[Q]):
-        self.collection.delete_many(
-            {"_id": {"$in": [question["_id"] for question in questions]}},
-        )
+        if len(questions) > 0:
+            self.collection.delete_many(
+                {"_id": {"$in": [question["_id"] for question in questions]}},
+            )
+
+    def add_remove_toxic(self, questions: list[ParsedQuestion]):
+        toxic_questions = [q for q in questions if q["toxic"]]
+        non_toxic_questions = [q for q in questions if not q["toxic"]]
+        if len(toxic_questions) > 0:
+            self.update_many(
+                filter={
+                    "_id": {
+                        "$in": [
+                            ObjectId(
+                                q["id"],
+                            )
+                            for q in toxic_questions
+                        ]
+                    }
+                },
+                update={"$set": {"toxic": False}},
+            )
+        if len(non_toxic_questions) > 0:
+            self.update_many(
+                filter={
+                    "_id": {
+                        "$in": [
+                            ObjectId(
+                                q["id"],
+                            )
+                            for q in non_toxic_questions
+                        ]
+                    }
+                },
+                update={"$set": {"toxic": True}},
+            )
 
     def archive_unarchive_questions(self, questions: list[str]):
         questions = list(
@@ -169,6 +215,40 @@ class Question(MongoDBCollection):
                 },
             )
         )
+
+    def apply_detoxify(
+        self,
+        toxic_questions: list[ParsedQuestion],
+        non_toxic_questions: list[ParsedQuestion],
+    ):
+        if len(toxic_questions) > 0:
+            self.update_many(
+                filter={
+                    "_id": {
+                        "$in": [
+                            ObjectId(
+                                q["id"],
+                            )
+                            for q in toxic_questions
+                        ]
+                    },
+                },
+                update={"$set": {"toxic": True, "moderate": True}},
+            )
+        if len(non_toxic_questions) > 0:
+            self.update_many(
+                filter={
+                    "_id": {
+                        "$in": [
+                            ObjectId(
+                                q["id"],
+                            )
+                            for q in non_toxic_questions
+                        ],
+                    },
+                },
+                update={"$set": {"moderate": True}},
+            )
 
 
 question = Question(db=db, collection_name="Question")

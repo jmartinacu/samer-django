@@ -1,5 +1,5 @@
-from pathlib import Path
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -94,7 +94,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Madrid"
 
 USE_I18N = True
 
@@ -122,6 +122,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AWS_BUCKET_NAME = os.getenv("AWS_BUCKET_NAME", "")
 
 AWS_DEFAULT_REGION = os.getenv("AWS_DEFAULT_REGION", "")
+
+# CELERY
+
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
+
+CELERY_ACCEPT_CONTENT = ["json"]
+
+CELERY_TASK_SERIALIZER = "json"
+
+CELERY_RESULT_SERIALIZER = "json"
+
+CELERY_TIMEZONE = "UTC"
 
 # AUTH USER
 
@@ -151,6 +165,11 @@ AUTH_INCLUDE_PATHS = [
     },
     {
         "name": "questions:delete_root",
+        "type": "dynamic",
+        "args": ["66dd91747f069f8dd89be45a"],
+    },
+    {
+        "name": "questions:toxic",
         "type": "dynamic",
         "args": ["66dd91747f069f8dd89be45a"],
     },

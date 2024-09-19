@@ -1,6 +1,6 @@
-from enum import Enum
 from datetime import datetime
-from typing import Literal, Union, TypedDict, TypeVar
+from enum import Enum
+from typing import Literal, TypedDict, TypeVar, Union
 
 from bson import ObjectId
 
@@ -33,6 +33,8 @@ class ParsedComment(TypedDict):
     author: str
     created_at: datetime
     text: str
+    toxic: bool
+    moderate: bool
 
 
 class ParsedTag(TypedDict):
@@ -48,13 +50,24 @@ class Comment(MongoDBCollection):
     author: str
     created_at: datetime
     text: str
+    toxic: bool
+    moderate: bool
 
-    def create(self, post: str, author: str, text: str):
+    def create(
+        self,
+        post: str,
+        author: str,
+        text: str,
+        toxic: bool = False,
+        moderate: bool = False,
+    ):
         comment = {
             "_id": ObjectId(),
             "post": post,
             "author": author,
             "text": text,
+            "toxic": toxic,
+            "moderate": moderate,
             "created_at": datetime.now(),
         }
         res = self.collection.insert_one(comment)
@@ -64,6 +77,60 @@ class Comment(MongoDBCollection):
         self.collection.delete_many(
             {"_id": {"$in": [comment["_id"] for comment in comments]}},
         )
+
+    def apply_detoxify(
+        self,
+        toxic_comments: list[ParsedComment],
+        non_toxic_comments: list[ParsedComment],
+    ):
+        if len(toxic_comments) > 0:
+            self.update_many(
+                filter={
+                    "_id": {
+                        "$in": [
+                            ObjectId(
+                                c["id"],
+                            )
+                            for c in toxic_comments
+                        ]
+                    },
+                },
+                update={"$set": {"toxic": True, "moderate": True}},
+            )
+        if len(non_toxic_comments) > 0:
+            self.update_many(
+                filter={
+                    "_id": {
+                        "$in": [
+                            ObjectId(
+                                c["id"],
+                            )
+                            for c in non_toxic_comments
+                        ],
+                    },
+                },
+                update={"$set": {"moderate": True}},
+            )
+
+    def _parse(self, comment):
+        return ParsedComment(
+            id=str(comment["_id"]),
+            post=comment["post"],
+            author=comment["author"],
+            text=comment["text"],
+            toxic=comment["toxic"],
+            moderate=comment["moderate"],
+            created_at=comment["created_at"],
+        )
+
+    def parse_comment(self, comment_id: str):
+        comment = self.find_one(query={"_id": ObjectId(comment_id)})
+        if comment is None:
+            return None
+        return self._parse(comment)
+
+    def parse_comments(self, comments: list[C]):
+        return list(map(self._parse, comments))
 
 
 comment = Comment(db=db, collection_name="Comment")

@@ -21,6 +21,11 @@ urlpatterns = [
         name="delete_root",
     ),
     path(
+        "toxic/root/<objectid:question_id>/",
+        views.add_remove_toxic,
+        name="toxic",
+    ),
+    path(
         "like/<objectid:question_id>/",
         views.add_remove_like,
         name="add_remove_like",
